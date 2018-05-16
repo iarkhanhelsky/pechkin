@@ -1,6 +1,16 @@
 module Pechkin
   describe Generator do
-    context 'when template file does not exist'
+    context 'when template file does not exist' do
+      it 'raises error'
+    end
+
+    context 'when bot does not exist' do
+      it 'raises error'
+    end
+
+    context 'when chat does not exist' do
+      it 'raises error'
+    end
   end
 
   describe 'Generated application' do

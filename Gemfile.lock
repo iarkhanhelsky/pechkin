@@ -91,6 +91,7 @@ PLATFORMS
 
 DEPENDENCIES
   grape
+  rack
   rack-test
   rspec
   rubocop
