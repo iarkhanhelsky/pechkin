@@ -5,3 +5,6 @@ RSpec::Core::RakeTask.new(:spec)
 RuboCop::RakeTask.new(:lint) do |t|
   t.options = %w[--display-style-guide --display-cop-names]
 end
+
+desc 'Run spec and linter'
+task :default => %i[spec lint]

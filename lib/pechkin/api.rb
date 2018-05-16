@@ -1,5 +1,5 @@
-require_relative 'pechkin/telegram'
 require 'grape'
+require_relative 'telegram'
 
 module Pechkin # :nodoc:
   # Generates all routes based on configuration
