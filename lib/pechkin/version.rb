@@ -4,7 +4,7 @@ module Pechkin
     VERSION = [0, 0, 1].freeze
     class << self
       def version_string
-        VERSION.join('.')
+        ['pechkin', VERSION.join('.')].join(' ')
       end
     end
   end

@@ -24,22 +24,22 @@ module Pechkin
         end
 
         parser.on('-p', '--port PORT', Integer) do |value|
-          options.port = value.to
+          options.port = value
         end
 
-        parser.on('--log-dir') do |value|
+        parser.on('--log-dir LOG_DIR') do |value|
           options.log_dir = value
         end
 
         parser.separator ''
         parser.separator 'Common options:'
-        opts.on_tail('-h', '--help', 'Show this message') do
-          puts opts
+        parser.on_tail('-h', '--help', 'Show this message') do
+          puts parser
           exit
         end
 
         # Another typical switch to print the version.
-        opts.on_tail('--version', 'Show version') do
+        parser.on_tail('--version', 'Show version') do
           puts Version.version_string
           exit
         end
@@ -48,7 +48,7 @@ module Pechkin
     end
 
     class << self
-      def parse(_args)
+      def parse(args)
         options_keeper = OpenStruct.new
         parser = OptionParser.new do |p|
           CLIBuilder.new(options_keeper).build(p)
