@@ -4,6 +4,7 @@ require_relative 'pechkin/config'
 require_relative 'pechkin/telegram'
 
 module Pechkin # :nodoc:
+  # Generates all routes based on configuration
   module Generator
     def configure(config)
       base_path = config['base_path']
