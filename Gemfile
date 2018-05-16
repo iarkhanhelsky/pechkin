@@ -1,4 +1,5 @@
 gem 'grape'
+gem 'rack'
 
 group :dev do
   gem 'rack-test'
