@@ -31,6 +31,10 @@ module Pechkin
           options.port = value
         end
 
+        parser.on('--pid PID_FILE') do |value|
+          options.pid_file = value
+        end
+
         parser.on('--log-dir LOG_DIR') do |value|
           options.log_dir = value
         end

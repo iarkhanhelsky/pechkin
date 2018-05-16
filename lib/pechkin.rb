@@ -9,7 +9,9 @@ module Pechkin # :nodoc:
     def run
       options = CLI.parse(ARGV)
       configuration = Config.new(options.config_file)
-      Rack::Server.start(app: Pechkin.create(configuration))
+      Rack::Server.start(app: Pechkin.create(configuration),
+                         Port: options.port || configuration.port,
+                         pid: options.pid_file)
     end
   end
 end
