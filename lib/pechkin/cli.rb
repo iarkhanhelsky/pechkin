@@ -7,6 +7,10 @@ require_relative 'version'
 module Pechkin
   # Command Line parser
   module CLI
+    # Default values for CLI options
+    DEFAULT_OPTIONS = {
+      config_file: '/etc/pechkin/config.yml'
+    }.freeze
     # Command Line Parser Builder
     class CLIBuilder
       attr_reader :options
@@ -49,7 +53,7 @@ module Pechkin
 
     class << self
       def parse(args)
-        options_keeper = OpenStruct.new
+        options_keeper = OpenStruct.new(DEFAULT_OPTIONS)
         parser = OptionParser.new do |p|
           CLIBuilder.new(options_keeper).build(p)
         end
