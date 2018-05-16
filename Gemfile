@@ -1,9 +1,8 @@
 gem 'grape'
 
-
 group :dev do
-  gem 'rubocop'
-  gem 'rspec'
-  gem 'webmock'
   gem 'rack-test'
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'webmock'
 end
