@@ -1,0 +1,17 @@
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'test/**/*.rb'
+    - 'spec/**/*.rb'
+
+Style/HashSyntax:
+  Exclude:
+    # for task :foo => :bar definitions
+    - '**/Rakefile'
+    - '**/*.rake'
+    - '**/*.rake.rb'
