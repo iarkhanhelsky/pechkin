@@ -21,7 +21,8 @@ module Pechkin
       def send_message(message, data, options)
         text = Message.new(data).render(message)
         @chat_ids.map do |chat|
-          response = send_data('sendMessage', options.update(text: text, chat_id: chat))
+          params = options.update(text: text, chat_id: chat)
+          response = send_data('sendMessage', params)
           [response.code, response.body]
         end
       end

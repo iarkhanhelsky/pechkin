@@ -1,5 +1,6 @@
 require 'grape'
 require_relative 'telegram'
+require 'json'
 
 module Pechkin # :nodoc:
   # Generates all routes based on configuration
@@ -28,9 +29,23 @@ module Pechkin # :nodoc:
         post message_name do
           template = message_desc['template']
           opts = { markup: 'HTML' }.update(message_desc['options'] || {})
+          # Some services will send json, but without correct content-type, then
+          # params will be parsed weirdely. So we try parse request body as json
+          params = ensure_json(request.body.read, params)
           bot.send_message(template, params, opts)
         end
       end
+    end
+
+    def ensure_json(body, params)
+      if headers['Content-Type'] == 'application/json'
+        params # Expected content type. Do nothing, just return basic params
+      else
+        JSON.parse(body) # Try parse body as json. If it possible will return as
+        # params
+      end
+    rescue JSON::JSONError => _error
+      params
     end
   end
 
