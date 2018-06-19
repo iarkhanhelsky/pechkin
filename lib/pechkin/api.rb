@@ -36,8 +36,10 @@ module Pechkin # :nodoc:
         end
       end
     end
+  end
 
-    def ensure_json(body, params)
+  module Helpers
+     def ensure_json(body, params)
       if headers['Content-Type'] == 'application/json'
         params # Expected content type. Do nothing, just return basic params
       else
@@ -53,6 +55,7 @@ module Pechkin # :nodoc:
     def create(config)
       klazz = Class.new(Grape::API) do
         extend Generator
+        helpers Helpers
       end
 
       klazz.configure(config)

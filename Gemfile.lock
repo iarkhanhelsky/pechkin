@@ -91,6 +91,7 @@ PLATFORMS
 
 DEPENDENCIES
   grape
+  powerpack
   rack
   rack-test
   rspec

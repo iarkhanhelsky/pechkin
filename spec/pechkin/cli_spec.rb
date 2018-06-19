@@ -20,7 +20,7 @@ module Pechkin
 
     context 'when log-dir option is provided' do
       it do
-        expect(CLI.parse(%w[--log-dir /var/log])).to_eq('/var/log')
+        expect(CLI.parse(%w[--log-dir /var/log]).log_dir).to eq('/var/log')
       end
     end
   end
