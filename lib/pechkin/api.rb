@@ -32,14 +32,17 @@ module Pechkin # :nodoc:
           # Some services will send json, but without correct content-type, then
           # params will be parsed weirdely. So we try parse request body as json
           params = ensure_json(request.body.read, params)
+          # If message description contains any variables will merge them with
+          # received parameters.
+          params = message_desc['variables'].merge(params) if message_desc.key?('variables')
           bot.send_message(template, params, opts)
         end
       end
     end
   end
 
-  module Helpers
-     def ensure_json(body, params)
+  module Helpers # :nodoc:
+    def ensure_json(body, params)
       if headers['Content-Type'] == 'application/json'
         params # Expected content type. Do nothing, just return basic params
       else

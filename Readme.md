@@ -32,6 +32,11 @@ chanels:
         # Extra options passed directly to Telegram Bot API sendMessage
         options:
           parse_mode: html
+        # Variables passed to template. This allows to share templates 
+        # between chanels
+        variables: # (optional)
+          key1: value1
+          # ...
 ```
 
 ## Roadmap
