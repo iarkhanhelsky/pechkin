@@ -5,13 +5,13 @@ module Pechkin
     FIXTURE_CONFIG = <<-CONFIG.strip_indent.freeze
     bots:
       marvin: TEST123456789
-    views: 
+    views:
     chanels:
       test:
         chat_ids: 10000
         bot: marvin
         messages:
-          test: 
+          test:
             template: spec/views/simple.erb
           options:
             parse_mode: html
@@ -22,7 +22,7 @@ module Pechkin
     end
 
     def app
-      Pechkin.create(YAML.safe_load(FIXTURE_CONFIG))  
+      Pechkin.create(YAML.safe_load(FIXTURE_CONFIG))
     end
 
     context 'when template file does not exist' do
@@ -45,10 +45,10 @@ module Pechkin
 
     context 'POST request with valid content-type ("application/json")' do
       let(:request) { { 'hello' => 'world' } }
-      
+
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'chat_id'=>'10000', 'markup'=>'HTML', 'text' => request.to_json })
+          .with(body: { 'chat_id' => '10000', 'markup' => 'HTML', 'text' => request.to_json })
           .to_return(status: 200)
 
         header 'Content-Type', 'application/json'
@@ -60,7 +60,7 @@ module Pechkin
       let(:request) { { 'hello' => 'world' } }
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'chat_id'=>'10000', 'markup'=>'HTML', 'text' => request.to_json })
+          .with(body: { 'chat_id' => '10000', 'markup' => 'HTML', 'text' => request.to_json })
           .to_return(status: 200)
         post '/test/test', request.to_json
       end
