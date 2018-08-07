@@ -1,4 +1,5 @@
 require 'rack'
+require 'logger'
 
 require_relative 'pechkin/cli'
 require_relative 'pechkin/api'
@@ -9,7 +10,12 @@ module Pechkin # :nodoc:
     def run
       options = CLI.parse(ARGV)
       configuration = Config.new(options.config_file)
-      Rack::Server.start(app: Pechkin.create(configuration),
+      log_dir = options.log_dir
+      app = Pechkin.create(configuration)
+      if log_dir
+        app.logger = ::Logger.new(File.join(log_dir, 'pechkin.log'), 'daily')
+      end
+      Rack::Server.start(app: app,
                          Port: options.port || configuration.port,
                          pid: options.pid_file)
     end

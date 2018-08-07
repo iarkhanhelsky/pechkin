@@ -22,7 +22,9 @@ module Pechkin
     end
 
     def app
-      Pechkin.create(YAML.safe_load(FIXTURE_CONFIG))
+      app = Pechkin.create(YAML.safe_load(FIXTURE_CONFIG))
+      app.logger Logger.new(StringIO.new)
+      app
     end
 
     context 'when template file does not exist' do
@@ -48,7 +50,9 @@ module Pechkin
 
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'chat_id' => '10000', 'markup' => 'HTML', 'text' => request.to_json })
+          .with(body: { 'chat_id' => '10000',
+                        'markup' => 'HTML',
+                        'text' => request.to_json })
           .to_return(status: 200)
 
         header 'Content-Type', 'application/json'
@@ -60,7 +64,9 @@ module Pechkin
       let(:request) { { 'hello' => 'world' } }
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'chat_id' => '10000', 'markup' => 'HTML', 'text' => request.to_json })
+          .with(body: { 'chat_id' => '10000',
+                        'markup' => 'HTML',
+                        'text' => request.to_json })
           .to_return(status: 200)
         post '/test/test', request.to_json
       end
