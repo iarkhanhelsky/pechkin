@@ -15,6 +15,10 @@ module Pechkin
             template: spec/views/simple.erb
           options:
             parse_mode: html
+          test-filters:
+            template: spec/views/simple.erb
+            filters:
+              text: /^default$/
     CONFIG
 
     let(:send_message_url) do
@@ -69,6 +73,34 @@ module Pechkin
                         'text' => request.to_json })
           .to_return(status: 200)
         post '/test/test', request.to_json
+      end
+    end
+
+    context 'when chanel contains filters' do
+      context 'when parameter matches filter' do
+        let(:send_message_url) do
+          'https://api.telegram.org/botTEST123456789/sendMessage'
+        end
+
+        let(:request) { { 'text' => 'default' } }
+
+        it do
+          stub_request(:post, send_message_url)
+            .with(body: { 'chat_id' => '10000',
+                          'markup' => 'HTML',
+                          'text' => request.to_json })
+            .to_return(status: 200)
+          post '/test/test-filters', request.to_json
+        end
+      end
+
+      context 'when parameter does not match filter' do
+        let(:request) { { 'text' => 'master' } }
+        it do
+          post '/test/test-filters', request.to_json
+          # Did not pass validation
+          expect(last_response.status).to eq(400)
+        end
       end
     end
   end

@@ -33,6 +33,15 @@ module Pechkin # :nodoc:
 
     # rubocop:disable Metrics/AbcSize
     def generate_endpoint(bot, message_name, message_desc)
+      params do
+        # TODO: Can't extract this code to method because this block is
+        # evaluated in separate scope
+        (message_desc['filters'] || []).each do |field, filter|
+          filter.match(%r{^/(.*)/$}) do |m|
+            requires field.to_sym, type: String, regexp: Regexp.new(m[1])
+          end
+        end
+      end
       post message_name do
         template = message_desc['template']
         opts = { markup: 'HTML' }.update(message_desc['options'] || {})
@@ -44,6 +53,7 @@ module Pechkin # :nodoc:
         # If message description contains any variables will merge them with
         # received parameters.
         params = (message_desc['variables'] || {}).merge(params)
+
         bot.send_message(template, params, opts)
       end
       # rubocop:enable Metrics/AbcSize
