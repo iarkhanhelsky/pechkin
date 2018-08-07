@@ -1,5 +1,5 @@
-gem 'grape'
-gem 'rack'
+gem 'grape', '~> 1.0.2'
+gem 'rack', '~> 2.0.5'
 
 group :dev do
   gem 'powerpack'

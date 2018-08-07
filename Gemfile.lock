@@ -42,7 +42,7 @@ GEM
       ast (~> 2.4.0)
     powerpack (0.1.1)
     public_suffix (3.0.2)
-    rack (2.0.4)
+    rack (2.0.5)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-test (0.7.0)
@@ -92,7 +92,7 @@ PLATFORMS
 DEPENDENCIES
   grape
   powerpack
-  rack
+  rack (~> 2.0.5)
   rack-test
   rspec
   rubocop
