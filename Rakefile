@@ -1,3 +1,5 @@
+require 'bundler/setup'
+require 'grably'
 require 'rubocop/rake_task'
 require 'rspec/core/rake_task'
 
