@@ -10,14 +10,19 @@ module Pechkin # :nodoc:
     def run
       options = CLI.parse(ARGV)
       configuration = Config.new(options.config_file)
-      log_dir = options.log_dir
+      setup_logging(options.log_dir) if options.log_dir
       app = Pechkin.create(configuration)
-      if log_dir
-        app.logger = ::Logger.new(File.join(log_dir, 'pechkin.log'), 'daily')
-      end
+      PechkinAPI.logger.info 'Starting pechkin service...'
       Rack::Server.start(app: app,
                          Port: options.port || configuration.port,
                          pid: options.pid_file)
+    end
+
+    def setup_logging(log_dir)
+      logger = ::Logger.new(File.join(log_dir, 'pechkin.log'), 'daily')
+      logger.level = ::Logger::INFO
+
+      PechkinAPI.logger = logger
     end
   end
 end

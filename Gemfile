@@ -1,7 +1,9 @@
-gem 'grape', '~> 1.0.2'
-gem 'rack', '~> 2.0.5'
+source 'https://rubygems.org'
+
+gemspec
 
 group :dev do
+  gem 'grably'
   gem 'powerpack'
   gem 'rack-test'
   gem 'rspec'
