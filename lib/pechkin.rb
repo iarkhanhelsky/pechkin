@@ -12,7 +12,7 @@ module Pechkin # :nodoc:
       configuration = Config.new(options.config_file)
       setup_logging(options.log_dir) if options.log_dir
       app = Pechkin.create(configuration)
-      PechkinAPI.logger.info "Starting pechkin service..."
+      PechkinAPI.logger.info 'Starting pechkin service...'
       Rack::Server.start(app: app,
                          Port: options.port || configuration.port,
                          pid: options.pid_file)
