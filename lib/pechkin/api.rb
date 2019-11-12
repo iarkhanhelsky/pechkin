@@ -16,7 +16,7 @@ module Pechkin # :nodoc:
     def create_chanels(chanels, bots)
       chanels.each do |chanel_name, chanel_desc|
         bot = bots[chanel_desc['bot']]
-        connector = create_connector(bot)
+        connector = create_connector(bot, chanel_name)
 
         chat_ids = chanel_desc['chat_ids']
         channel = Chanel.new(connector, chat_ids)
@@ -27,12 +27,14 @@ module Pechkin # :nodoc:
       end
     end
 
-    def create_connector(bot)
+    def create_connector(bot, channel_name)
       case bot['connector']
       when 'tg', 'telegram'
         TelegramConnector.new(bot['token'])
       when 'slack'
         SlackConnector.new(bot['token'])
+      else
+        raise 'Unknown connector ' + bot['connector'] + ' for ' + channel_name
       end
     end
 

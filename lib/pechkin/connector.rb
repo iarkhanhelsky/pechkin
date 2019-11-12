@@ -12,6 +12,7 @@ module Pechkin
       uri = URI.parse(url)
       headers = { 'Content-Type' => 'application/json' }.merge(headers)
       http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = url.start_with?('https://')
 
       request = Net::HTTP::Post.new(uri.request_uri, headers)
       request.body = data.to_json
@@ -50,7 +51,7 @@ module Pechkin
       url = 'https://slack.com/api/chat.postMessage'
       response = post_data(url, params, headers: @headers)
 
-      [chat_id, response.code.to_i, response.body]
+      [chat, response.code.to_i, response.body]
     end
   end
 end
