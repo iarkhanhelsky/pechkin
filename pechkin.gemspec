@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
   s.executables << 'pechkin'
   s.homepage = 'https://github.com/iarkhanhelsky/pechkin'
 
-  s.add_runtime_dependency 'grape', '~> 1.0'
+  s.add_runtime_dependency 'grape', '1.1.0'
   s.add_runtime_dependency 'rack', '~> 2.0'
 end
