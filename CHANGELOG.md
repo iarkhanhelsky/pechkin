@@ -6,6 +6,8 @@
 * Now we support multiple connectors
 * Added Slack connector
 
+* Rack version updated to 2.0.6
+
 # Version 0.0.4
 
 * Rack version updated to 2.0.4
