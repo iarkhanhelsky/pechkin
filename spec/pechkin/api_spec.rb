@@ -4,7 +4,9 @@ module Pechkin
 
     FIXTURE_CONFIG = <<-CONFIG.strip_indent.freeze
     bots:
-      marvin: TEST123456789
+      marvin:
+        token: TEST123456789
+        connector: tg
     views:
     chanels:
       test:
@@ -22,7 +24,7 @@ module Pechkin
     CONFIG
 
     let(:send_message_url) do
-      'https://api.telegram.org/botTEST123456789/sendMessage'
+      'http://api.telegram.org:443/botTEST123456789/sendMessage'
     end
 
     def app
@@ -54,9 +56,9 @@ module Pechkin
 
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'chat_id' => '10000',
-                        'markup' => 'HTML',
-                        'text' => request.to_json })
+          .with(body: { 'markup' => 'HTML',
+                        'chat_id' => 10000,
+                        'text' => request.to_json }.to_json)
           .to_return(status: 200)
 
         header 'Content-Type', 'application/json'
@@ -68,9 +70,10 @@ module Pechkin
       let(:request) { { 'hello' => 'world' } }
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'chat_id' => '10000',
-                        'markup' => 'HTML',
-                        'text' => request.to_json })
+          .with(body: { 'markup' => 'HTML',
+                        'chat_id' => 10000,
+                        'text' => request.to_json }.to_json,
+                headers: { 'Content-Type' => 'application/json' })
           .to_return(status: 200)
         post '/test/test', request.to_json
       end

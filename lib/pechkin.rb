@@ -2,6 +2,9 @@ require 'rack'
 require 'logger'
 
 require_relative 'pechkin/cli'
+require_relative 'pechkin/message'
+require_relative 'pechkin/connector'
+require_relative 'pechkin/channel'
 require_relative 'pechkin/api'
 require_relative 'pechkin/config'
 
