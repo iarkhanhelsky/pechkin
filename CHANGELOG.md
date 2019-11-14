@@ -1,5 +1,9 @@
 # New
 
+# Version 0.1.2
+
+* Slack connector: do not escape special characters after message formatting
+
 # Version 0.1.1
 
 * Slack connector should decode html entities
