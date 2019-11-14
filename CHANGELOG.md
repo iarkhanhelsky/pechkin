@@ -1,5 +1,9 @@
 # New
 
+# Version 0.1.1
+
+* Slack connector should decode html entities
+
 # Version 0.1.0
 
 * Grape version pinned to 1.1.0

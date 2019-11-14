@@ -2,6 +2,7 @@ require 'open-uri'
 require 'net/http'
 require 'uri'
 require 'json'
+require 'cgi'
 
 module Pechkin
   # Base connector
@@ -47,7 +48,12 @@ module Pechkin
     end
 
     def send_message(chat, message, options)
-      params = options.update(channel: chat, text: message)
+      text = CGI.unescape_html(message)
+                .gsub('<', '&lt')
+                .gsub('>', '&gt;')
+                .gsub('&', '&amp;')
+
+      params = options.update(channel: chat, text: text)
       url = 'https://slack.com/api/chat.postMessage'
       response = post_data(url, params, headers: @headers)
 
