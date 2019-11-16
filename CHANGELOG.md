@@ -1,5 +1,9 @@
 # New
 
+# Version 0.1.3
+
+* Do not send empty messages with Slack connector
+
 # Version 0.1.2
 
 * Slack connector: do not escape special characters after message formatting

@@ -50,6 +50,8 @@ module Pechkin
     def send_message(chat, message, options)
       text = CGI.unescape_html(message)
 
+      return [chat, 'not sent: empty', ''] if text.strip.empty?
+
       params = options.update(channel: chat, text: text)
       url = 'https://slack.com/api/chat.postMessage'
       response = post_data(url, params, headers: @headers)
