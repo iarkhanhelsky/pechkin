@@ -7,6 +7,7 @@ require_relative 'pechkin/connector'
 require_relative 'pechkin/channel'
 require_relative 'pechkin/api'
 require_relative 'pechkin/config'
+require_relative 'pechkin/substitute'
 
 module Pechkin # :nodoc:
   class << self

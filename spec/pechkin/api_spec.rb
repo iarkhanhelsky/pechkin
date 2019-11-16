@@ -24,7 +24,7 @@ module Pechkin
     CONFIG
 
     let(:send_message_url) do
-      'http://api.telegram.org:443/botTEST123456789/sendMessage'
+      'https://api.telegram.org/botTEST123456789/sendMessage'
     end
 
     def app
