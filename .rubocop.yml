@@ -9,6 +9,9 @@ Metrics/BlockLength:
     - 'test/**/*.rb'
     - 'spec/**/*.rb'
 
+Metrics/MethodLength:
+  Max: 25
+
 Style/HashSyntax:
   Exclude:
     # for task :foo => :bar definitions
