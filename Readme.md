@@ -8,9 +8,11 @@ Configuration is stored in YAML file with following format
 port: 9292 # bind port
 base_url: # base url
 # Describes bot tokens by name if single value is provided
-# it mapped to 'default' bot. 
-bots: 
-  marvin: # bot token
+# it mapped to 'default' bot.
+bots:
+  marvin:
+    token: # bot token
+    connector: (tg|telegram|slack) # connector name for Telegram or Slack
 # Directory where templates are stored.
 views: # working dir by default
 # Description of chanels
@@ -18,7 +20,7 @@ chanels:
   # For each message in chanel will be created endpoint
   # POST /:chanel_name/:message-name
   zombiemobile-status:
-    # List of chat_ids where messages will be sent 
+    # List of chat_ids where messages will be sent
     # Single value may be provided
     chat_ids: []
     # Specifies bot token to use. If no bot is provided
@@ -32,7 +34,7 @@ chanels:
         # Extra options passed directly to Telegram Bot API sendMessage
         options:
           parse_mode: html
-        # Variables passed to template. This allows to share templates 
+        # Variables passed to template. This allows to share templates
         # between chanels
         variables: # (optional)
           key1: value1
