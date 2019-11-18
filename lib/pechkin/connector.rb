@@ -10,7 +10,6 @@ module Pechkin
     def send_message(chat, message, message_desc); end
 
     def post_data(url, data, headers: {})
-      puts data.inspect
       uri = URI.parse(url)
       headers = { 'Content-Type' => 'application/json' }.merge(headers)
       http = Net::HTTP.new(uri.host, uri.port)
