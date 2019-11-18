@@ -1,4 +1,8 @@
-# New
+# Version 0.2.0
+
+* Misc fixes
+* Can send slack attachments via `slack_attachments`
+* Can substitute request parameters direct into message description values
 
 # Version 0.1.3
 
