@@ -10,14 +10,39 @@ module Pechkin
       @logger = ::Logger.new(STDOUT)
     end
 
-    def send_message(message, data, options)
-      text = Message.new(data).render(message)
+    def send_message(message, data, message_desc)
+      text = message.nil? ? '' : Message.new(data).render(message)
+
+      message_desc = substitute(data, message_desc)
+
       logger.warn 'Resulting text is empty' if text.empty?
-      results = @channel_list.map { |id| @connector.send_message(id, text, options) }
+      results = @channel_list.map do |id|
+        @connector.send_message(id, text, message_desc)
+      end
+
       process_results(message, results)
     end
 
     private
+
+    def substitute(data, message_desc)
+      substitute_recursive(Substitute.new(data), message_desc)
+    end
+
+    def substitute_recursive(substitutions, object)
+      case object
+      when String
+        substitutions.process(object)
+      when Array
+        object.map { |o| substitute_recursive(substitutions, o) }
+      when Hash
+        r = {}
+        object.each { |k, v| r[k] = substitute_recursive(substitutions, v) }
+        r
+      else
+        object
+      end
+    end
 
     def process_results(message, results)
       success, error = results.partition { |_chat, code, _body| code < 400 }

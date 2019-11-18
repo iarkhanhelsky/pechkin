@@ -32,8 +32,7 @@ chanels:
         # Template to use for message
         template: views/server-alert.erb
         # Extra options passed directly to Telegram Bot API sendMessage
-        options:
-          parse_mode: html
+        telegram_parse_mode: html
         # Variables passed to template. This allows to share templates
         # between chanels
         variables: # (optional)

@@ -7,9 +7,10 @@ require 'cgi'
 module Pechkin
   # Base connector
   class Connector
-    def send_message(chat, message, options); end
+    def send_message(chat, message, message_desc); end
 
     def post_data(url, data, headers: {})
+      puts data.inspect
       uri = URI.parse(url)
       headers = { 'Content-Type' => 'application/json' }.merge(headers)
       http = Net::HTTP.new(uri.host, uri.port)
@@ -27,8 +28,8 @@ module Pechkin
       @bot_token = bot_token
     end
 
-    def send_message(chat_id, message, options = {})
-      options = { markup: 'HTML' }.update(options)
+    def send_message(chat_id, message, message_desc)
+      options = { parse_mode: message_desc['telegram_parse_mode'] || 'HTML' }
       params = options.update(chat_id: chat_id, text: message)
 
       response = post_data(method_url('sendMessage'), params)
@@ -47,12 +48,17 @@ module Pechkin
       @headers = { 'Authorization' => "Bearer #{bot_token}" }
     end
 
-    def send_message(chat, message, options)
+    def send_message(chat, message, message_desc)
       text = CGI.unescape_html(message)
 
-      return [chat, 400, 'not sent: empty'] if text.strip.empty?
+      attachments = message_desc['slack_attachments'] || {}
 
-      params = options.update(channel: chat, text: text)
+      if text.strip.empty? && attachments.empty?
+        return [chat, 400, 'not sent: empty']
+      end
+
+      params = { channel: chat, text: text, attachments: attachments }
+
       url = 'https://slack.com/api/chat.postMessage'
       response = post_data(url, params, headers: @headers)
 

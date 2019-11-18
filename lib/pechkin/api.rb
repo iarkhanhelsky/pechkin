@@ -16,6 +16,9 @@ module Pechkin # :nodoc:
     def create_chanels(chanels, bots)
       chanels.each do |chanel_name, chanel_desc|
         bot = bots[chanel_desc['bot']]
+
+        raise "'#{chanel_desc['bot']}' not found." unless bot
+
         connector = create_connector(bot, chanel_name)
 
         chat_ids = chanel_desc['chat_ids']
@@ -57,7 +60,6 @@ module Pechkin # :nodoc:
       end
       post message_name do
         template = message_desc['template']
-        opts = message_desc['options'] || {}
         # Some services will send json, but without correct content-type, then
         # params will be parsed weirdely. So we try parse request body as json
         params = ensure_json(request.body.read, params)
@@ -67,7 +69,7 @@ module Pechkin # :nodoc:
         # received parameters.
         params = (message_desc['variables'] || {}).merge(params)
 
-        channel.send_message(template, params, opts)
+        channel.send_message(template, params, message_desc)
       end
       # rubocop:enable Metrics/AbcSize
     end

@@ -56,8 +56,8 @@ module Pechkin
 
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'markup' => 'HTML',
-                        'chat_id' => 10000,
+          .with(body: { 'parse_mode' => 'HTML',
+                        'chat_id' => 10_000,
                         'text' => request.to_json }.to_json)
           .to_return(status: 200)
 
@@ -70,8 +70,8 @@ module Pechkin
       let(:request) { { 'hello' => 'world' } }
       it do
         stub_request(:post, send_message_url)
-          .with(body: { 'markup' => 'HTML',
-                        'chat_id' => 10000,
+          .with(body: { 'parse_mode' => 'HTML',
+                        'chat_id' => 10_000,
                         'text' => request.to_json }.to_json,
                 headers: { 'Content-Type' => 'application/json' })
           .to_return(status: 200)
@@ -90,7 +90,7 @@ module Pechkin
         it do
           stub_request(:post, send_message_url)
             .with(body: { 'chat_id' => '10000',
-                          'markup' => 'HTML',
+                          'parse_mode' => 'HTML',
                           'text' => request.to_json })
             .to_return(status: 200)
           post '/test/test-filters', request.to_json
