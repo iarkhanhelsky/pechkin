@@ -3,11 +3,11 @@ module Pechkin
   class Chanel
     attr_accessor :logger
 
-    def initialize(connector, channel_list)
+    def initialize(connector, channel_list, logger = ::Logger.new(STDOUT))
       @connector = connector
       @channel_list = channel_list
       @channel_list = [channel_list] unless channel_list.is_a?(Array)
-      @logger = ::Logger.new(STDOUT)
+      @logger = logger
     end
 
     def send_message(message, data, message_desc)
