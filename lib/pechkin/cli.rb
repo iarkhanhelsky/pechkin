@@ -83,15 +83,15 @@ module Pechkin
     extend CLIHelper
 
     opt :config_file, default: Dir.pwd,
-                     names: ['-c', '--config-dir FILE'],
-                     desc: 'Path to configuration file'
+                      names: ['-c', '--config-dir FILE'],
+                      desc: 'Path to configuration file'
 
-    opt :port, names: ['--port PORT'], default: 9292
+    opt :port, names: ['--port PORT'], default: 9292, type: Integer
 
-    opt :pid_file, names: ['-p', '--pid-file[FILE]'],
+    opt :pid_file, names: ['-p', '--pid-file [FILE]'],
                    desc: 'Path to output PID file'
 
-    opt :log_dir, names: ['-l', '--log-dir[DIR]'],
+    opt :log_dir, names: ['-l', '--log-dir [DIR]'],
                   desc: 'Path to log directory'
   end
 end
