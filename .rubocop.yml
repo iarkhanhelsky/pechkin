@@ -21,3 +21,6 @@ Style/HashSyntax:
     - '**/Rakefile'
     - '**/*.rake'
     - '**/*.rake.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
