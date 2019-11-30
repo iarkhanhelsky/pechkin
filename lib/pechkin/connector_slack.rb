@@ -1,4 +1,4 @@
-module Pechkin # :nodoc:
+module Pechkin # :nodoc:0
   class SlackConnector < Connector # :nodoc:
     def initialize(bot_token)
       @headers = { 'Authorization' => "Bearer #{bot_token}" }

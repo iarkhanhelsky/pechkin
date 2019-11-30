@@ -5,66 +5,93 @@ require 'ostruct'
 require_relative 'version'
 
 module Pechkin
-  # Command Line parser
-  module CLI
-    # Default values for CLI options
-    DEFAULT_OPTIONS = {
-      config_file: '/etc/pechkin/config.yml'
-    }.freeze
-    # Command Line Parser Builder
-    class CLIBuilder
-      attr_reader :options
-      def initialize(options_keeper)
-        @options = options_keeper
-      end
+  # Helper methods to declare all command line options. This should remove most
+  # optparse configuration boilerplate
+  module CLIHelper
+    # @param name [Symbol] variable name to store values
+    # @opt default [Object] default value
+    # @opt names [Array<String>] list of command line keys
+    # @opt desc [String] option description
+    # @opt type [Class] argument type to parse from command line, e.g. Integer
+    def opt(name, default: nil, names:, desc: '', type: nil)
+      @cli_options ||= []
 
-      def build(parser)
-        # rubocop:disable Metrics/LineLength
-        parser.banner = 'Usage: pechkin [options]'
-        parser.separator ''
+      # raise ':names is nil or empty' if names.nil? || names.empty?
 
-        parser.on('-c', '--config CONFIG_FILE', 'default value is /etc/pechkin/config.yml') do |value|
-          options.config_file = value
-        end
-
-        parser.on('-p', '--port PORT', Integer) do |value|
-          options.port = value
-        end
-
-        parser.on('--pid PID_FILE') do |value|
-          options.pid_file = value
-        end
-
-        parser.on('--log-dir LOG_DIR') do |value|
-          options.log_dir = value
-        end
-
-        parser.separator ''
-        parser.separator 'Common options:'
-        parser.on_tail('-h', '--help', 'Show this message') do
-          puts parser
-          exit
-        end
-
-        # Another typical switch to print the version.
-        parser.on_tail('--version', 'Show version') do
-          puts Version.version_string
-          exit
-        end
-        # rubocop:enable Metrics/LineLength
-      end
+      @cli_options << { name: name,
+                        default: default,
+                        names: names,
+                        type: type,
+                        desc: desc }
     end
 
-    class << self
-      def parse(args)
-        options_keeper = OpenStruct.new(DEFAULT_OPTIONS)
-        parser = OptionParser.new do |p|
-          CLIBuilder.new(options_keeper).build(p)
-        end
+    def banner(banner)
+      @cli_banner = banner
+    end
 
+    def parse(args)
+      values = OpenStruct.new
+      parser = parser_create(values)
+
+      if args.empty?
+        puts parser.help
+        exit 2
+      else
         parser.parse(args)
-        options_keeper
+        values
       end
     end
+
+    def parser_create(values)
+      parser = OptionParser.new
+      parser.banner = @cli_banner
+
+      (@cli_options || []).each do |o|
+        values[o[:name]] = o[:default] if o[:default]
+
+        args = []
+        args += o[:names]
+        args << o[:type] if o[:type]
+        args << o[:desc] if o[:desc]
+
+        parser.on(*args) { |v| values[o[:name]] = v }
+      end
+
+      parser_create_default_opts(parser)
+
+      parser
+    end
+
+    def parser_create_default_opts(parser)
+      parser.separator ''
+      parser.separator 'Common options:'
+      parser.on_tail('-h', '--help', 'Show this message') do
+        puts parser
+        exit 1
+      end
+
+      # Another typical switch to print the version.
+      parser.on_tail('--version', 'Show version') do
+        puts Version.version_string
+        exit 0
+      end
+    end
+  end
+
+  # Command Line Parser Builder
+  class CLI
+    extend CLIHelper
+
+    opt :config_file, default: Dir.pwd,
+                     names: ['-c', '--config-dir FILE'],
+                     desc: 'Path to configuration file'
+
+    opt :port, names: ['--port PORT'], default: 9292
+
+    opt :pid_file, names: ['-p', '--pid-file[FILE]'],
+                   desc: 'Path to output PID file'
+
+    opt :log_dir, names: ['-l', '--log-dir[DIR]'],
+                  desc: 'Path to log directory'
   end
 end
