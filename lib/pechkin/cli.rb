@@ -18,7 +18,7 @@ module Pechkin
         @options = options_keeper
       end
 
-      def build(parser) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      def build(parser)
         # rubocop:disable Metrics/LineLength
         parser.banner = 'Usage: pechkin [options]'
         parser.separator ''

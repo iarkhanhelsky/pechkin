@@ -10,7 +10,10 @@ Metrics/BlockLength:
     - 'spec/**/*.rb'
 
 Metrics/MethodLength:
-  Max: 25
+  Max: 30
+
+Metrics/AbcSize:
+  Max: 20
 
 Style/HashSyntax:
   Exclude:
