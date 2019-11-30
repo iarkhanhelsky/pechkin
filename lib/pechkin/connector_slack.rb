@@ -4,21 +4,21 @@ module Pechkin # :nodoc:
       @headers = { 'Authorization' => "Bearer #{bot_token}" }
     end
 
-    def send_message(chat, message, message_desc)
+    def send_message(channel, message, message_desc)
       text = CGI.unescape_html(message)
 
       attachments = message_desc['slack_attachments'] || {}
 
       if text.strip.empty? && attachments.empty?
-        return [chat, 400, 'not sent: empty']
+        return [channel, 400, 'Internal error: message is empty']
       end
 
-      params = { channel: chat, text: text, attachments: attachments }
+      params = { channel: channel, text: text, attachments: attachments }
 
       url = 'https://slack.com/api/chat.postMessage'
       response = post_data(url, params, headers: @headers)
 
-      [chat, response.code.to_i, response.body]
+      [channel, response.code.to_i, response.body]
     end
   end
 end
