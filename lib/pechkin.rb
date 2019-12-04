@@ -2,6 +2,8 @@ require 'rack'
 require 'logger'
 
 require_relative 'pechkin/cli'
+require_relative 'pechkin/exceptions'
+require_relative 'pechkin/handler'
 require_relative 'pechkin/message'
 require_relative 'pechkin/connector'
 require_relative 'pechkin/connector_slack'
