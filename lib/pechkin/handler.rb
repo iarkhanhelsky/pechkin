@@ -38,6 +38,10 @@ module Pechkin
       end
     end
 
+    def message?(channel_id, msg_id)
+      channels.key?(channel_id) && channels[channel_id].messages.key?(msg_id)
+    end
+
     private
 
     # Find channel by it's id or trow ChannelNotFoundError

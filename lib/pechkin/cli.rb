@@ -91,7 +91,10 @@ module Pechkin
     opt :pid_file, names: ['-p', '--pid-file [FILE]'],
                    desc: 'Path to output PID file'
 
-    opt :log_dir, names: ['-l', '--log-dir [DIR]'],
+    opt :log_dir, names: ['--log-dir [DIR]'],
                   desc: 'Path to log directory'
+
+    opt :list, names: ['-l', '--list'],
+               desc: 'List all endpoints'
   end
 end
