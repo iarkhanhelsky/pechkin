@@ -1,3 +1,4 @@
+require 'erb'
 require 'rack'
 require 'logger'
 
@@ -18,17 +19,21 @@ module Pechkin # :nodoc:
   class << self
     def run
       options = CLI.parse(ARGV)
+
       configuration = Configuration.new(options.config_file)
 
-      if options.list
-        configuration.list
-      else
-        setup_logging(options.log_dir) if options.log_dir
-        handler = Handler.new(configuration.bots, configuration.channels)
-        Rack::Server.start(app: HttpHandler.new(handler),
-                           Port: options.port,
-                           pid: options.pid_file)
-      end
+      configuration.list if options.list?
+      exit 0 if options.check?
+
+      setup_logging(options.log_dir) if options.log_dir
+      handler = Handler.new(configuration.bots, configuration.channels)
+      Rack::Server.start(app: HttpHandler.new(handler),
+                         Port: options.port,
+                         pid: options.pid_file)
+    rescue StandardError => e
+      warn 'Error: ' + e.message
+      warn "\t" + e.backtrace.reverse.join("\n\t") if options.debug?
+      exit 2
     end
 
     def setup_logging(_log_dir)

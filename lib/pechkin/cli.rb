@@ -94,7 +94,13 @@ module Pechkin
     opt :log_dir, names: ['--log-dir [DIR]'],
                   desc: 'Path to log directory'
 
-    opt :list, names: ['-l', '--list'],
-               desc: 'List all endpoints'
+    opt :list?, names: ['-l', '--[no-]list'],
+                desc: 'List all endpoints'
+
+    opt :check?, names: ['-k', '--[no-]check'],
+                 desc: 'Load configuration and exit'
+
+    opt :debug?, names: ['--[no-]debug'],
+                 desc: 'Print debug information'
   end
 end

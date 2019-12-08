@@ -134,8 +134,8 @@ module Pechkin
 
       @views = {}
 
-      Dir["#{views_dir}/**/*"].each do |f|
-        relative_path = t["#{views_dir}/".length..-1]
+      Dir["#{views_dir}/**/*.erb"].each do |f|
+        relative_path = f["#{views_dir}/".length..-1]
         @views[relative_path] = MessageTemplate.new(IO.read(f))
       end
     end
