@@ -2,10 +2,9 @@ module Pechkin
   # Processes feeded data chunks and sends them via connectors to needed IM
   # services. Can skip some requests acording to filters.
   class Handler
-    attr_reader :connectors, :channels
+    attr_reader :channels
 
-    def initialize(connectors, channels)
-      @connectors = connectors
+    def initialize(channels)
       @channels = channels
     end
 
@@ -31,10 +30,8 @@ module Pechkin
       text = ''
       text = template.render(data) unless template.nil?
 
-      connector = connectors[channel_config.bot]
-
       channel_config.chat_ids.map do |chat_id|
-        connector.send_message(chat_id, text, message_config)
+        channel_config.connector.send_message(chat_id, text, message_config)
       end
     end
 
@@ -57,17 +54,6 @@ module Pechkin
       raise MessageNotFoundError, msg_id unless message_list.key?(msg_id)
 
       message_list[msg_id]
-    end
-
-    def create_connector(bot)
-      case bot.connector
-      when 'tg', 'telegram'
-        TelegramConnector.new(bot.token)
-      when 'slack'
-        SlackConnector.new(bot.token)
-      else
-        raise 'Unknown connector ' + bot.connector + ' for ' + bot.name
-      end
     end
 
     def substitute(data, message_desc)

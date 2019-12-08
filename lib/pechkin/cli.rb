@@ -102,5 +102,11 @@ module Pechkin
 
     opt :debug?, names: ['--[no-]debug'],
                  desc: 'Print debug information'
+
+    opt :send_data, names: ['-s', '--send ENDPOINT'],
+                    desc: 'Send data to specified ENDPOINT and exit. Requires' \
+                          '--data to be set.'
+    opt :data, names: ['--data DATA'],
+               desc: 'Data to send with --send flag. Json string or @filename.'
   end
 end

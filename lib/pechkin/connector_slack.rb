@@ -1,7 +1,10 @@
 module Pechkin # :nodoc:
   class SlackConnector < Connector # :nodoc:
-    def initialize(bot_token)
+    attr_reader :name
+
+    def initialize(bot_token, name)
       @headers = { 'Authorization' => "Bearer #{bot_token}" }
+      @name = name
     end
 
     def send_message(channel, message, message_desc)

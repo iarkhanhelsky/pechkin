@@ -3,7 +3,7 @@ module Pechkin
     describe '#handle' do
       context 'when configuration has no channel with provided id' do
         it do
-          expect { Handler.new({}, {}).handle('foo', 'bar', {}) }
+          expect { Handler.new({}).handle('foo', 'bar', {}) }
             .to raise_error(ChannelNotFoundError)
         end
       end
@@ -12,7 +12,7 @@ module Pechkin
         it do
           channel_double = double
           expect(channel_double).to receive(:messages).and_return({})
-          handler = Handler.new({}, 'foo' => channel_double)
+          handler = Handler.new('foo' => channel_double)
 
           expect { handler.handle('foo', 'bar', {}) }
             .to raise_error(MessageNotFoundError)
@@ -21,11 +21,11 @@ module Pechkin
 
       let(:connector) { double }
       let(:channel) { double }
-      let(:handler) { Handler.new({ 'marvin' => connector }, 'a' => channel) }
+      let(:handler) { Handler.new('a' => channel) }
 
       before { allow(channel).to receive(:messages).and_return('a' => {}) }
       before { allow(channel).to receive(:chat_ids).and_return(['#general']) }
-      before { allow(channel).to receive(:bot).and_return('marvin') }
+      before { allow(channel).to receive(:connector).and_return(connector) }
 
       it 'applies substitutions to message parameters' do
         data = { reference: 1234 }

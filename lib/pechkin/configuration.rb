@@ -2,7 +2,7 @@ require 'yaml'
 
 module Pechkin
   Bot = Struct.new(:token, :connector, :name, keyword_init: true)
-  Channel = Struct.new(:chat_ids, :bot, :messages, keyword_init: true)
+  Channel = Struct.new(:chat_ids, :connector, :messages, keyword_init: true)
 
   # Pechkin reads its configuration from provided directory structure. Basic
   # layout expected to be as follows:
@@ -74,7 +74,7 @@ module Pechkin
       puts "\nChannels:"
       channels.each do |channel_name, channel|
         puts "  - name #{channel_name}"
-        puts "    bot: #{channel.bot.name}"
+        puts "    bot: #{channel.connector.name}"
         puts '    messages: '
         channel.messages.each do |message_name, _message|
           puts "     - /#{channel_name}/#{message_name}"
@@ -173,7 +173,8 @@ module Pechkin
       msg = "#{channel_file}: bot '#{bot}' not found"
       raise ConfigurationError, msg unless bots.key?(bot)
 
-      Channel.new(bot: bots[bot], chat_ids: chat_ids, messages: messages)
+      connector = create_connector(bots[bot])
+      Channel.new(connector: connector, chat_ids: chat_ids, messages: messages)
     end
 
     def load_messages_configuration(channel_dir)
@@ -193,6 +194,17 @@ module Pechkin
       end
 
       messages
+    end
+
+    def create_connector(bot)
+      case bot.connector
+      when 'tg', 'telegram'
+        TelegramConnector.new(bot.token, bot.name)
+      when 'slack'
+        SlackConnector.new(bot.token, bot.name)
+      else
+        raise 'Unknown connector ' + bot.connector + ' for ' + bot.name
+      end
     end
 
     def get_template(path)

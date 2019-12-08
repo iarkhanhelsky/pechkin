@@ -1,7 +1,10 @@
 module Pechkin
   class TelegramConnector < Connector #:nodoc:
-    def initialize(bot_token)
+    attr_reader :name
+
+    def initialize(bot_token, name)
       @bot_token = bot_token
+      @name = name
     end
 
     def send_message(chat_id, message, message_desc)
