@@ -1,9 +1,12 @@
 require 'yaml'
 
-module Pechkin
-  Bot = Struct.new(:token, :connector, :name, keyword_init: true)
-  Channel = Struct.new(:chat_ids, :connector, :messages, keyword_init: true)
+require_relative 'configuration/model'
+require_relative 'configuration/configuration_loader'
+require_relative 'configuration/configuration_loader_bots'
+require_relative 'configuration/configuration_loader_channels'
+require_relative 'configuration/configuration_loader_views'
 
+module Pechkin
   # Pechkin reads its configuration from provided directory structure. Basic
   # layout expected to be as follows:
   #   .
@@ -86,132 +89,11 @@ module Pechkin
     private
 
     def load_configuration
-      load_bots_configuration
-      load_views_configuration
-      load_channels_configuration
-    end
+      @bots = ConfigurationLoaderBots.new.load_from_directory(working_dir)
+      @views = ConfigurationLoaderViews.new.load_from_directory(working_dir)
 
-    def load_bots_configuration
-      bots_dir = File.join(working_dir, 'bots')
-
-      unless File.directory?(bots_dir)
-        raise ConfigurationError, "'#{bots_dir}' is not a directory"
-      end
-
-      @bots = {}
-
-      Dir["#{bots_dir}/*.yml"].each do |bot_file|
-        name = File.basename(bot_file, '.yml')
-        bot = load_bot_configuration(bot_file)
-        bot.name = name
-        @bots[name] = bot
-      end
-    end
-
-    def load_bot_configuration(bot_file)
-      bot_configuration = YAML.safe_load(IO.read(bot_file))
-
-      token = check_field(bot_configuration, 'token', bot_file)
-      connector = check_field(bot_configuration, 'connector', bot_file)
-
-      Bot.new(token: token, connector: connector)
-    end
-
-    def check_field(object, field, file)
-      contains = object.key?(field)
-
-      raise ConfigurationError, "#{file}: '#{field}' is missing" unless contains
-
-      object[field]
-    end
-
-    def load_views_configuration
-      views_dir = File.join(working_dir, 'views')
-
-      unless File.directory?(views_dir)
-        raise ConfigurationError, "'#{views_dir}' is not a directory"
-      end
-
-      @views = {}
-
-      Dir["#{views_dir}/**/*.erb"].each do |f|
-        relative_path = f["#{views_dir}/".length..-1]
-        @views[relative_path] = MessageTemplate.new(IO.read(f))
-      end
-    end
-
-    def load_channels_configuration
-      channels_dir = File.join(working_dir, 'channels')
-
-      unless File.directory?(channels_dir)
-        raise ConfigurationError, "'#{channels_dir}' is not a directory"
-      end
-
-      @channels = {}
-
-      Dir["#{channels_dir}/*"].each do |channel_dir|
-        next unless File.directory?(channel_dir)
-
-        name = File.basename(channel_dir)
-        @channels[name] = load_channel_configuration(channel_dir)
-      end
-    end
-
-    def load_channel_configuration(channel_dir)
-      channel_file = File.join(channel_dir, '_channel.yml')
-
-      msg = "_channel.yml not found at #{channel_dir}"
-      raise ConfigurationError, msg unless File.exist?(channel_file)
-
-      channel_config = YAML.safe_load(IO.read(channel_file))
-
-      bot = check_field(channel_config, 'bot', channel_file)
-      chat_ids = check_field(channel_config, 'chat_ids', channel_file)
-      chat_ids = [chat_ids] unless chat_ids.is_a?(Array)
-      messages = load_messages_configuration(channel_dir)
-
-      msg = "#{channel_file}: bot '#{bot}' not found"
-      raise ConfigurationError, msg unless bots.key?(bot)
-
-      connector = create_connector(bots[bot])
-      Channel.new(connector: connector, chat_ids: chat_ids, messages: messages)
-    end
-
-    def load_messages_configuration(channel_dir)
-      messages = {}
-
-      Dir["#{channel_dir}/*.yml"].each do |file|
-        next if File.basename(file) == '_channel.yml'
-
-        message_config = YAML.safe_load(IO.read(file))
-        name = File.basename(file, '.yml')
-
-        if message_config.key?('template')
-          message_config['template'] = get_template(message_config['template'])
-        end
-
-        messages[name] = message_config
-      end
-
-      messages
-    end
-
-    def create_connector(bot)
-      case bot.connector
-      when 'tg', 'telegram'
-        TelegramConnector.new(bot.token, bot.name)
-      when 'slack'
-        SlackConnector.new(bot.token, bot.name)
-      else
-        raise 'Unknown connector ' + bot.connector + ' for ' + bot.name
-      end
-    end
-
-    def get_template(path)
-      msg = "Can't find template: #{path}"
-      raise ConfigurationError, msg unless @views.key?(path)
-
-      @views[path]
+      channel_loader = ConfigurationLoaderChannels.new(@bots, @views)
+      @channels = channel_loader.load_from_directory(working_dir)
     end
   end
 end
