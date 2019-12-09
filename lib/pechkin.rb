@@ -31,7 +31,7 @@ module Pechkin # :nodoc:
 
     def initialize(options)
       @options = options
-      @configuration = Configuration.new(options.config_file)
+      @configuration = Configuration.load_from_directory(options.config_file)
       @handler = Handler.new(@configuration.channels)
     end
 

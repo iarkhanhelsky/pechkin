@@ -59,10 +59,25 @@ module Pechkin
   # Views
   #   'views' folder contains erb templates to render when data arives.
   class Configuration
+    class << self
+      def load_from_directory(working_dir)
+        bots = ConfigurationLoaderBots.new.load_from_directory(working_dir)
+        views = ConfigurationLoaderViews.new.load_from_directory(working_dir)
+
+        channel_loader = ConfigurationLoaderChannels.new(bots, views)
+        channels = channel_loader.load_from_directory(working_dir)
+
+        Configuration.new(working_dir, bots, views, channels)
+      end
+    end
+
     attr_accessor :bots, :channels, :views, :working_dir
 
-    def initialize(working_dir)
+    def initialize(working_dir, bots, views, channels)
       @working_dir = working_dir
+      @bots = bots
+      @views = views
+      @channels = channels
 
       load_configuration
     end
@@ -89,11 +104,7 @@ module Pechkin
     private
 
     def load_configuration
-      @bots = ConfigurationLoaderBots.new.load_from_directory(working_dir)
-      @views = ConfigurationLoaderViews.new.load_from_directory(working_dir)
 
-      channel_loader = ConfigurationLoaderChannels.new(@bots, @views)
-      @channels = channel_loader.load_from_directory(working_dir)
     end
   end
 end
