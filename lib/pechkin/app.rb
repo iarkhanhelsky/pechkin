@@ -94,6 +94,10 @@ module Pechkin
       response(404, '{"status":"error", "reason":"message not found"}')
     end
 
+    def bad_request(body)
+      response(503, body)
+    end
+
     def response(code, body)
       [code.to_s, DEFAULT_HEADERS, [body]]
     end
