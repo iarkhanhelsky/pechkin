@@ -55,22 +55,29 @@ module Pechkin # :nodoc:
     end
 
     def send_data
-      ch, msg = options.send_data.match(%r{^([^/]+)/(.+)}) do |m|
-        [m[1], m[2]]
-      end
+      ch, msg = parse_endpoint(options.send_data)
 
       raise "#{ch}/#{msg} not found" unless handler.message?(ch, msg)
 
-      data = options.data
-      if data.start_with?('@')
-        f = data[1..-1]
-        raise "File not found #{f}" unless File.exist?(f)
-
-        data = IO.read(f)
-      end
+      data = read_data(options.data)
 
       handler.preview = options.preview
       handler.handle(ch, msg, JSON.parse(data, symbolize_names: true))
+    end
+
+    def read_data(data)
+      return data unless data.start_with?('@')
+
+      file = data[1..-1]
+      raise "File not found #{file}" unless File.exist?(file)
+
+      IO.read(file)
+    end
+
+    def parse_endpoint(endpoint)
+      endpoint.match(%r{^([^/]+)/(.+)}) do |m|
+        [m[1], m[2]]
+      end
     end
   end
 end

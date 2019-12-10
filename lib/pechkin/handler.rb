@@ -25,7 +25,7 @@ module Pechkin
       # Find message and try substitute values to message parameters.
       message_config = substitute(data, fetch_message(channel_config, msg_id))
 
-      data = (message_config['parameters'] || {}).merge(data)
+      data = (message_config['variables'] || {}).merge(data)
       template = message_config['template']
 
       text = ''

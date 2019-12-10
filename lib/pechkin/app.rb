@@ -40,8 +40,8 @@ module Pechkin
     def call(env)
       RequestHandler.new(handler, env).handle
     rescue StandardError => e
-      body = '{"status": "error", "reason":"' + e.message + '"'
-      ['503', { 'Content-Type' => 'application/json' }, body]
+      body = { status: 'error', reason: e.message }.to_json
+      ['503', { 'Content-Type' => 'application/json' }, [body]]
     end
   end
 
@@ -95,7 +95,7 @@ module Pechkin
     end
 
     def response(code, body)
-      [code.to_s, DEFAULT_HEADERS, body]
+      [code.to_s, DEFAULT_HEADERS, [body]]
     end
 
     def post?

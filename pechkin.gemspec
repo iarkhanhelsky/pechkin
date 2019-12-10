@@ -13,6 +13,6 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/iarkhanhelsky/pechkin'
 
   s.add_runtime_dependency 'grape', '1.1.0'
-  s.add_runtime_dependency 'rack', '2.0.6'
   s.add_runtime_dependency 'prometheus-client', '1.0.0'
+  s.add_runtime_dependency 'rack', '2.0.6'
 end
