@@ -107,6 +107,72 @@ of this field is direct mapping for `attachments` field in Slack API. See
 [documentation](https://api.slack.com/docs/message-attachments) for more
 details.
 
+## Wrapping up
+
+Create bot file `bots/marvin.yml`
+
+```
+token: xob-1234567890987654321
+connector: slack
+```
+
+Create view `views/hello.erb`
+
+```
+Hello, <% name %>!
+```
+
+Create channel `channels/my-org-random/_channel.yml`
+
+```
+chat_ids: '#random'
+bot: marvin
+```
+
+Create message `channels/my-org-random/hello.yml`
+
+```
+template: hello.erb
+```
+
+Check configuration
+
+```
+pechkin -c . -k -l
+```
+
+Preview message
+
+```
+pechkin -c -s /my-org-random/hello --data '{"name": "all"}' --preview
+```
+
+
+Try to send message manualy
+
+```
+pechkin -c -s /my-org-random/hello --data '{"name": "all"}'
+```
+
+Start pechkin:
+
+```
+pechkin -c . --port 8080
+```
+
+Send message:
+
+```
+curl -X POST -H 'Content-Type: application/json' --data '{"name": "all"}' \
+     localhost:8080/my-org-random/hello
+```
+
+Check metrics:
+
+```
+curl localhost:8080/metrics
+```
+
 ## Startup options
 
 ```
@@ -129,3 +195,8 @@ Common options:
     -h, --help                       Show this message
         --version                    Show version
 ```
+
+## Other notes
+
+* Pechkin is bundled with prometheus client. It exposed metrics on `/metrics`
+endpoint
