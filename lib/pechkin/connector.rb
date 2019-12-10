@@ -9,6 +9,11 @@ module Pechkin
   class Connector
     def send_message(chat, message, message_desc); end
 
+    def preview(chats, message, _message_desc)
+      puts "Connector: #{self.class.name}; Chats: #{chats.join(', ')}\n"
+      puts "Message:\n#{message}"
+    end
+
     def post_data(url, data, headers: {})
       uri = URI.parse(url)
       headers = { 'Content-Type' => 'application/json' }.merge(headers)

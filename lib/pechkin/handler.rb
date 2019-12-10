@@ -3,6 +3,7 @@ module Pechkin
   # services. Can skip some requests acording to filters.
   class Handler
     attr_reader :channels
+    attr_writer :preview
 
     def initialize(channels)
       @channels = channels
@@ -30,13 +31,21 @@ module Pechkin
       text = ''
       text = template.render(data) unless template.nil?
 
-      channel_config.chat_ids.map do |chat_id|
-        channel_config.connector.send_message(chat_id, text, message_config)
+      chats = channel_config.chat_ids
+      connector = channel_config.connector
+      if preview?
+        connector.preview(chats, text, message_config)
+      else
+        chats.map { |chat| connector.send_message(chat, text, message_config) }
       end
     end
 
     def message?(channel_id, msg_id)
       channels.key?(channel_id) && channels[channel_id].messages.key?(msg_id)
+    end
+
+    def preview?
+      @preview
     end
 
     private

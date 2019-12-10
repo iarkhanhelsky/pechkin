@@ -25,6 +25,11 @@ module Pechkin
                         desc: desc }
     end
 
+    def separator(string)
+      @cli_options ||= []
+      @cli_options << string
+    end
+
     def banner(banner)
       @cli_banner = banner
     end
@@ -47,14 +52,18 @@ module Pechkin
       parser.banner = @cli_banner
 
       (@cli_options || []).each do |o|
-        values[o[:name]] = o[:default] if o[:default]
+        if o.is_a?(String)
+          parser.separator o
+        else
+          values[o[:name]] = o[:default] if o[:default]
 
-        args = []
-        args += o[:names]
-        args << o[:type] if o[:type]
-        args << o[:desc] if o[:desc]
+          args = []
+          args += o[:names]
+          args << o[:type] if o[:type]
+          args << o[:desc] if o[:desc]
 
-        parser.on(*args) { |v| values[o[:name]] = v }
+          parser.on(*args) { |v| values[o[:name]] = v }
+        end
       end
 
       parser_create_default_opts(parser)
@@ -82,6 +91,8 @@ module Pechkin
   class CLI
     extend CLIHelper
 
+    separator 'Run options'
+
     opt :config_file, default: Dir.pwd,
                       names: ['-c', '--config-dir FILE'],
                       desc: 'Path to configuration file'
@@ -92,21 +103,30 @@ module Pechkin
                    desc: 'Path to output PID file'
 
     opt :log_dir, names: ['--log-dir [DIR]'],
-                  desc: 'Path to log directory'
+                  desc: 'Path to log directory. Output will be writen to'  \
+                        'pechkin.log file. If not specified will write to' \
+                        'STDOUT'
+
+    separator 'Utils for configuration maintenance'
 
     opt :list?, names: ['-l', '--[no-]list'],
                 desc: 'List all endpoints'
 
     opt :check?, names: ['-k', '--[no-]check'],
                  desc: 'Load configuration and exit'
-
-    opt :debug?, names: ['--[no-]debug'],
-                 desc: 'Print debug information'
-
     opt :send_data, names: ['-s', '--send ENDPOINT'],
                     desc: 'Send data to specified ENDPOINT and exit. Requires' \
                           '--data to be set.'
+    opt :preview,   names: ['--preview'],
+                    desc: 'Print rendering result to STDOUT and exit. ' \
+                          'Use with send'
     opt :data, names: ['--data DATA'],
                desc: 'Data to send with --send flag. Json string or @filename.'
+
+    separator 'Debug options'
+
+    opt :debug?, names: ['--[no-]debug'],
+                 desc: 'Print debug information and stack trace on errors'
+
   end
 end
