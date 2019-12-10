@@ -1,55 +1,131 @@
-# Pechkin
+# Who the heck is Pechkin?
 
-## Config file format
+Pechkin is a postman from soviet animated film series.
 
-Configuration is stored in YAML file with following format
+# What is pechkin (gem) ?
 
-```yaml
-port: 9292 # bind port
-base_url: # base url
-# Describes bot tokens by name if single value is provided
-# it mapped to 'default' bot.
-bots:
-  marvin:
-    token: # bot token
-    connector: (tg|telegram|slack) # connector name for Telegram or Slack
-# Directory where templates are stored.
-views: # working dir by default
-# Description of chanels
-chanels:
-  # For each message in chanel will be created endpoint
-  # POST /:chanel_name/:message-name
-  zombiemobile-status:
-    # List of chat_ids where messages will be sent
-    # Single value may be provided
-    chat_ids: []
-    # Specifies bot token to use. If no bot is provided
-    # 'default' bot will be used
-    bot: marvin
-    # Description of message kinds
-    messages:
-      server-alert:
-        # Template to use for message
-        template: views/server-alert.erb
-        # Extra options passed directly to Telegram Bot API sendMessage
-        telegram_parse_mode: html
-        # Variables passed to template. This allows to share templates
-        # between chanels
-        variables: # (optional)
-          key1: value1
-          # ...
+Pechkin is webhook to IM (currently Telegram, Slack) proxy. It allows you to
+transform any request into pretty message in your working channels. Long story
+short:
+
+* You describe set of templates and channel configurations to instruct pechkin
+  how to render received json data into messages and where to send them
+* When pechkin started process any POST request and acts according to your
+  instrcutions
+
+# Configuration basics
+
+## Bots
+
+First. You need to create bot to allow pechkin interact with IM APIs. All bots
+stored in `bots/` directory, one `yaml` file per bot.
+
+```
+bots/marvin.yml
+bots/bender.yml
 ```
 
-## Roadmap
+Each `bot/*.yml` is bot description. It has following fields:
 
-# First Milestone (Basic functionality. Fast up and running gem)
+* `token` - API token to authorize bot requests. See IM documentation for
+  details.
+* `connector` - connector type. Currenlty: `slack` or `telegram`.
 
-- [x] CLI support
-- [x] Finalize configuration format
-- [ ] Gem build / install tasks
+Bot name is taken from `yml` file name. So `bot/bender.yml` is `bender` and
+`bot/marvin.yml` is `marvin`
 
-# Second Milestone (Polishing API, Fine testing, Adding features)
+Next. You need to create `views/` directory and create your first template.
+Template is `*.erb` file. Each template is rendered with ruby internal ERB class
+with `trim_mode: '-'`. Let's create very simple erb template `views/hello.erb`:
 
-- [ ] `--log-directory` cli option support
-- [ ] Unit tests
-- [ ] Readme, badges, coverage, etc.
+```
+Hello, <% name %>!
+```
+
+## Channels
+
+Now we need destination where to send our message. This destinations are grouped
+in `channels` and each `channel` has list of messages it can receive. Channel
+descriptions are stored under `channels/` directory. It has following
+structure:
+
+```
+channels/
+  | - %channel-name%
+       | - _channel.yml
+       | - %message-name%.yml
+```
+
+Common channel setting are stored in `_channel.yml` file. You can configure
+following parameters:
+
+* `chat_ids` - list of chats or channels to send your message to
+* `bot` - name of bot to use for sending messages
+
+## Messages
+
+Then we create `hello.yml` to send hello in channels chats. Messages are
+configured with following parameters:
+
+* `template` - template file path relative to `views/` directory
+(i.e. 'hello.erb')
+* `variables` - is a mapping (key - value) for configurable values in shared
+templates. For example one may want to share `commit.erb` among multiple
+channels but with sligthly different parameters. It may be `repository_base_url`
+wich you want to override for each channel separately. `variables` content will
+be merged with received data. So data can override variable parameters too.
+
+### Message values substitutions
+
+As well as you can inject variable parameters into template data through
+`variables` field in message configuration you also can substitute some values
+in message config. This is honestly very dirty way to set `slack_attachments`
+(see below) values, without any external scripting.
+
+Any top-level value can be substitued with `${...}` syntax in any field inside
+message description. For example:
+
+```
+slack_attachments:
+  - title: Author
+    value: "${author}"
+```
+
+No value processing is supported.
+
+### Connector speceific parameters
+
+*Telegram*:
+
+* `telegram_parse_mode` - `markdown` or `html` mode for Telegram messages
+
+*Slack*:
+
+* `slack_attachments` - description of attachments to use with Slack message.
+Slack allows to send messages with empty text and only attachments set. Content
+of this field is direct mapping for `attachments` field in Slack API. See
+[documentation](https://api.slack.com/docs/message-attachments) for more
+details.
+
+## Startup options
+
+```
+Usage: pechkin [options]
+Run options
+    -c, --config-dir FILE            Path to configuration file
+        --port PORT
+    -p, --pid-file [FILE]            Path to output PID file
+        --log-dir [DIR]              Path to log directory. Output will be writen topechkin.log file. If not specified will write toSTDOUT
+Utils for configuration maintenance
+    -l, --[no-]list                  List all endpoints
+    -k, --[no-]check                 Load configuration and exit
+    -s, --send ENDPOINT              Send data to specified ENDPOINT and exit. Requires--data to be set.
+        --preview                    Print rendering result to STDOUT and exit. Use with send
+        --data DATA                  Data to send with --send flag. Json string or @filename.
+Debug options
+        --[no-]debug                 Print debug information and stack trace on errors
+
+Common options:
+    -h, --help                       Show this message
+        --version                    Show version
+```

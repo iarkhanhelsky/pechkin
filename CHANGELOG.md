@@ -1,3 +1,18 @@
+# Version 1.0.0
+
+* Changed configuration layout. See Readme.md for that
+* Added prometheus client to expose basic http metrics
+* Drop Grape dependency. Use barebones Rack app
+* Add propper logging support
+
+Quality of life features:
+
+* Added `--check` flag - read configuration and exit. With error reporting
+* Added `--list` flag. To print current configuration
+* Added `--send` flag. To test messages.
+* Added `trim_mode: '-'` support for  ERB templates
+
+
 # Version 0.2.0
 
 * Misc fixes
