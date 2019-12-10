@@ -11,4 +11,12 @@ module Pechkin
         .to eq("Hello\n")
     end
   end
+
+  describe MessageBinding do
+    it do
+      msg = MessageBinding.new(name: 'John', 'variables' => ['foo', 'bar'])
+      expect(msg.name).to eq('John')
+      expect(msg.variables).to eq(['foo', 'bar'])
+    end
+  end
 end

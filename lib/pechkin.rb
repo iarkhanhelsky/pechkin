@@ -62,7 +62,7 @@ module Pechkin # :nodoc:
       data = read_data(options.data)
 
       handler.preview = options.preview
-      handler.handle(ch, msg, JSON.parse(data, symbolize_names: true))
+      handler.handle(ch, msg, JSON.parse(data))
     end
 
     def read_data(data)

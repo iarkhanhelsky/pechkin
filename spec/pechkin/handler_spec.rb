@@ -40,7 +40,21 @@ module Pechkin
         handler.handle('a', 'a', data)
       end
 
-      it 'merges data values with parameters field' do
+      it 'merges data values with variables field' do
+        template = double
+        message = {
+          'template' => template,
+          'variables' => { 'issue_labels' => ['HH-\\d+', 'hh'] }
+        }
+
+        expect(channel)
+          .to receive(:messages).and_return('a' => message)
+        expect(template)
+          .to receive(:render).with(message['variables']).and_return('')
+        expect(connector)
+          .to receive(:send_message).with('#general', '', message)
+
+        handler.handle('a', 'a', {})
       end
 
       it 'sends message for each channel id' do

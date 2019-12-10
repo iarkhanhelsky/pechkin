@@ -70,7 +70,7 @@ module Pechkin
       return not_found unless message?
 
       begin
-        data = JSON.parse(req.body.read, symbolize_names: true)
+        data = JSON.parse(req.body.read)
       rescue JSON::JSONError => e
         return bad_request(e.message)
       end
