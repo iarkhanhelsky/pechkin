@@ -100,11 +100,5 @@ module Pechkin
         puts
       end
     end
-
-    private
-
-    def load_configuration
-
-    end
   end
 end

@@ -15,7 +15,7 @@ module Pechkin # :nodoc:
   end
 
   class HttpRequestHandler # :nodoc:
-    REQ_PATH_PATTERN = %r{^/(.+)/([^/]+)/?$}.freeze
+    REQ_PATH_PATTERN = %r{^/(.+)/([^/]+)/?$}
     DEFAULT_CONTENT_TYPE = { 'Content-Type' => 'application/json' }.freeze
     DEFAULT_HEADERS = {}.merge(DEFAULT_CONTENT_TYPE).freeze
 
