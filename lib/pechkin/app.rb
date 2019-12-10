@@ -1,20 +1,53 @@
-require 'json'
+module Pechkin
+  # Application configurator and builder. This creates all needed middleware
+  # and stuff
+  class AppBuilder
+    def build(handler, options)
+      app = App.new
+      app.handler = handler
 
-module Pechkin # :nodoc:
-  # Pechkin WEB Api handler. It responsible for parsing http requests and
-  # prepare all needed data for Pechkin::Handler to process it.
-  class HttpHandler
+      logger = create_logger(options.log_dir)
+
+      Rack::Builder.app do
+        use Rack::CommonLogger, logger
+        use Rack::Deflater
+        use Prometheus::Middleware::Collector
+        use Prometheus::Middleware::Exporter
+
+        run app
+      end
+    end
+
+    private
+
+    def create_logger(log_dir)
+      if log_dir
+        raise "Directory #{log_dir} does not exist" unless File.exist?(log_dir)
+
+        log_file = File.join(log_dir, 'pechkin.log')
+        file = File.open(log_file, File::WRONLY | File::APPEND)
+        Logger.new(file)
+      else
+        Logger.new(STDOUT)
+      end
+    end
+  end
+
+  # Rack application to handle requests
+  class App
     attr_accessor :handler
 
     def call(env)
-      HttpRequestHandler.new(handler, env).handle
+      RequestHandler.new(handler, env).handle
     rescue StandardError => e
       body = '{"status": "error", "reason":"' + e.message + '"'
       ['503', { 'Content-Type' => 'application/json' }, body]
     end
   end
 
-  class HttpRequestHandler # :nodoc:
+  # Http requests handler. We need fresh instance per each request. To keep
+  # internal state isolated
+  class RequestHandler
     REQ_PATH_PATTERN = %r{^/(.+)/([^/]+)/?$}
     DEFAULT_CONTENT_TYPE = { 'Content-Type' => 'application/json' }.freeze
     DEFAULT_HEADERS = {}.merge(DEFAULT_CONTENT_TYPE).freeze

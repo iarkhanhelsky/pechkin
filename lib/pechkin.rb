@@ -1,6 +1,8 @@
 require 'erb'
 require 'rack'
 require 'logger'
+require 'prometheus/middleware/collector'
+require 'prometheus/middleware/exporter'
 
 require_relative 'pechkin/cli'
 require_relative 'pechkin/exceptions'
@@ -10,9 +12,9 @@ require_relative 'pechkin/connector'
 require_relative 'pechkin/connector_slack'
 require_relative 'pechkin/connector_telegram'
 require_relative 'pechkin/channel'
-require_relative 'pechkin/http_handler'
 require_relative 'pechkin/configuration'
 require_relative 'pechkin/substitute'
+require_relative 'pechkin/app'
 
 module Pechkin # :nodoc:
   class << self
@@ -48,10 +50,7 @@ module Pechkin # :nodoc:
     end
 
     def run_server
-      http_handler = HttpHandler.new
-      http_handler.handler = handler
-
-      Rack::Server.start(app: HttpHandler.new(http_handler),
+      Rack::Server.start(app: AppBuilder.new.build(handler, options),
                          Port: options.port, pid:  options.pid_file)
     end
 

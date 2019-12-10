@@ -1,8 +1,8 @@
 module Pechkin
-  describe HttpHandler do
+  describe App do
     include Rack::Test::Methods
 
-    let(:app) { HttpHandler.new }
+    let(:app) { App.new }
     let(:handler) { double }
 
     before(:each) do

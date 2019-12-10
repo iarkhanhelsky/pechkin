@@ -78,8 +78,6 @@ module Pechkin
       @bots = bots
       @views = views
       @channels = channels
-
-      load_configuration
     end
 
     def list
