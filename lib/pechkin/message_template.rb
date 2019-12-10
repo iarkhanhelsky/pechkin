@@ -9,7 +9,7 @@ module Pechkin
   # Message template to render final message.
   class MessageTemplate
     def initialize(erb)
-      @erb_template = ERB.new(erb, trim_mode: '-')
+      @erb_template = ERB.new(erb, nil, trim_mode: '-')
     end
 
     def render(data)
