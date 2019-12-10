@@ -1,6 +1,6 @@
 # Pechkin
 
-[![Gem](https://img.shields.io/gem/v/tracetool.svg)](https://rubygems.org/gems/pechkin)
+[![Gem](https://img.shields.io/gem/v/pechkin.svg)](https://rubygems.org/gems/pechkin)
 
 # Who the heck is Pechkin?
 
