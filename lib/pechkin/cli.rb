@@ -127,6 +127,5 @@ module Pechkin
 
     opt :debug?, names: ['--[no-]debug'],
                  desc: 'Print debug information and stack trace on errors'
-
   end
 end
