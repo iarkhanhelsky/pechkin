@@ -6,15 +6,16 @@ module Pechkin
     end
   end
 
-  ERB_INITIALIZE_KEYWORD_ARGUMENTS = ERB.instance_method(:initialize).parameters.assoc(:key)
-
   # Message template to render final message.
   class MessageTemplate
+
+    ERB_INITIALIZE_KEYWORD_ARGUMENTS = ERB.instance_method(:initialize).parameters.assoc(:key)
+
     def initialize(erb)
       # ERB#initialize has different signature starting from Ruby 2.6.*
       # See link:
       # https://github.com/ruby/ruby/blob/2311087/NEWS#stdlib-updates-outstanding-ones-only
-      if ERB_INITIALIZE_KEYWORD_ARGUMENTS # Ruby 2.6+
+      if MessageTemplate::ERB_INITIALIZE_KEYWORD_ARGUMENTS # Ruby 2.6+
         @erb_template = ERB.new(erb, trim_mode: '-')
       else
         safe_level = nil
