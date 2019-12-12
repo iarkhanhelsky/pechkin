@@ -10,14 +10,6 @@ module Pechkin
       expect(MessageTemplate.new(template).render({}))
         .to eq("Hello\n")
     end
-
-    describe '::ruby_v260_or_later?' do
-      it { expect(MessageTemplate.ruby_v260_or_later?('2.7')).to be(true) }
-      it { expect(MessageTemplate.ruby_v260_or_later?('2.6.1')).to be(true) }
-      it { expect(MessageTemplate.ruby_v260_or_later?('2.6.0')).to be(true) }
-      it { expect(MessageTemplate.ruby_v260_or_later?('2.5.1')).to be(false) }
-      it { expect(MessageTemplate.ruby_v260_or_later?('1.9')).to be(false) }
-    end
   end
 
   describe MessageBinding do
