@@ -5,14 +5,14 @@ module Pechkin
     def build(handler, options)
       app = App.new
       app.handler = handler
-
+      prometheus = Pechkin::PrometheusUtils.registry
       logger = create_logger(options.log_dir)
 
       Rack::Builder.app do
         use Rack::CommonLogger, logger
         use Rack::Deflater
-        use Prometheus::Middleware::Collector
-        use Prometheus::Middleware::Exporter
+        use Prometheus::Middleware::Collector, registry: prometheus
+        use Prometheus::Middleware::Exporter, registry: prometheus
 
         run app
       end

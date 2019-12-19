@@ -14,6 +14,7 @@ require_relative 'pechkin/connector_telegram'
 require_relative 'pechkin/channel'
 require_relative 'pechkin/configuration'
 require_relative 'pechkin/substitute'
+require_relative 'pechkin/prometheus_utils'
 require_relative 'pechkin/app'
 
 module Pechkin # :nodoc:
