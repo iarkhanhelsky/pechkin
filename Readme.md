@@ -202,5 +202,5 @@ Common options:
 
 ## Other notes
 
-* Pechkin is bundled with prometheus client. It exposed metrics on `/metrics`
-endpoint
+* Pechkin is bundled with prometheus client, all metrics available
+  on `/metrics` endpoint.
