@@ -14,9 +14,9 @@ module Pechkin
 
   describe MessageBinding do
     it do
-      msg = MessageBinding.new(name: 'John', 'variables' => ['foo', 'bar'])
+      msg = MessageBinding.new(name: 'John', 'variables' => %w[foo bar])
       expect(msg.name).to eq('John')
-      expect(msg.variables).to eq(['foo', 'bar'])
+      expect(msg.variables).to eq(%w[foo bar])
     end
   end
 end
