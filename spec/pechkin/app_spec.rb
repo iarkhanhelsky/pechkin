@@ -78,7 +78,7 @@ module Pechkin
       expect(handler)
         .to receive(:message?).with('a', 'b').and_return(true)
       expect(handler)
-        .to receive(:handle).with('a', 'b', { 'name' => 'John' }).and_return([])
+        .to receive(:handle).with('a', 'b', 'name' => 'John').and_return([])
 
       post '/a/b', data.to_json
 
