@@ -189,7 +189,7 @@ Run options
 Utils for configuration maintenance
     -l, --[no-]list                  List all endpoints
     -k, --[no-]check                 Load configuration and exit
-    -s, --send ENDPOINT              Send data to specified ENDPOINT and exit. Requires--data to be set.
+    -s, --send ENDPOINT              Send data to specified ENDPOINT and exit. Requires --data to be set.
         --preview                    Print rendering result to STDOUT and exit. Use with send
         --data DATA                  Data to send with --send flag. Json string or @filename.
 Debug options
