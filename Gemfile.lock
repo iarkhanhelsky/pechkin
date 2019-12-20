@@ -3,6 +3,7 @@ PATH
   specs:
     pechkin (1.0.3)
       grape (= 1.1.0)
+      htauth (= 2.0.0)
       prometheus-client (= 1.0.0)
       rack (= 2.0.8)
 
@@ -47,6 +48,7 @@ GEM
       rack-accept
       virtus (>= 1.0.0)
     hashdiff (0.3.7)
+    htauth (2.0.0)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
