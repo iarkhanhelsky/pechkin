@@ -115,8 +115,8 @@ module Pechkin
     opt :check?, names: ['-k', '--[no-]check'],
                  desc: 'Load configuration and exit'
     opt :send_data, names: ['-s', '--send ENDPOINT'],
-                    desc: 'Send data to specified ENDPOINT and exit. Requires' \
-                          '--data to be set.'
+                    desc: 'Send data to specified ENDPOINT and exit. ' \
+                          'Requires --data to be set.'
     opt :preview,   names: ['--preview'],
                     desc: 'Print rendering result to STDOUT and exit. ' \
                           'Use with send'
