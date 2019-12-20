@@ -11,6 +11,7 @@ module Pechkin
       Rack::Builder.app do
         use Rack::CommonLogger, logger
         use Rack::Deflater
+        use Pechkin::Auth::Middleware, working_dir: options.config_file
         use Prometheus::Middleware::Collector, registry: prometheus
         use Prometheus::Middleware::Exporter, registry: prometheus
 

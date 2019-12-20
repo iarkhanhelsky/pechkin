@@ -3,6 +3,8 @@ require 'rack'
 require 'logger'
 require 'prometheus/middleware/collector'
 require 'prometheus/middleware/exporter'
+require 'htauth'
+require 'base64'
 
 require_relative 'pechkin/cli'
 require_relative 'pechkin/exceptions'
@@ -15,6 +17,7 @@ require_relative 'pechkin/channel'
 require_relative 'pechkin/configuration'
 require_relative 'pechkin/substitute'
 require_relative 'pechkin/prometheus_utils'
+require_relative 'pechkin/auth'
 require_relative 'pechkin/app'
 
 module Pechkin # :nodoc:
@@ -44,10 +47,11 @@ module Pechkin # :nodoc:
 
       if options.send_data
         send_data
-        exit 0
+      elsif options.auth
+        add_auth
+      else
+        run_server
       end
-
-      run_server
     end
 
     def run_server
@@ -79,6 +83,11 @@ module Pechkin # :nodoc:
       endpoint.match(%r{^([^/]+)/(.+)}) do |m|
         [m[1], m[2]]
       end
+    end
+
+    def add_auth
+      user, password = options.auth.split(':')
+      Pechkin::Auth::Manager.new(options.config_file).add(user, password)
     end
   end
 end

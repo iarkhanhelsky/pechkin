@@ -108,7 +108,6 @@ module Pechkin
                         'STDOUT'
 
     separator 'Utils for configuration maintenance'
-
     opt :list?, names: ['-l', '--[no-]list'],
                 desc: 'List all endpoints'
 
@@ -123,8 +122,11 @@ module Pechkin
     opt :data, names: ['--data DATA'],
                desc: 'Data to send with --send flag. Json string or @filename.'
 
-    separator 'Debug options'
+    separator 'Auth utils'
+    opt :auth, names: ['--add-auth USER:PASSWORD'],
+               desc: 'Add auth entry to .htpasswd file.'
 
+    separator 'Debug options'
     opt :debug?, names: ['--[no-]debug'],
                  desc: 'Print debug information and stack trace on errors'
   end
