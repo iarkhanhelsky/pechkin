@@ -185,19 +185,39 @@ Run options
     -c, --config-dir FILE            Path to configuration file
         --port PORT
     -p, --pid-file [FILE]            Path to output PID file
-        --log-dir [DIR]              Path to log directory. Output will be writen topechkin.log file. If not specified will write toSTDOUT
+        --log-dir [DIR]              Path to log directory. Output will be
+                                     writen topechkin.log file. If not specified
+                                     will write to STDOUT
+        --auth-file FILE             Path to .htpasswd file. By default
+                                    `pechkin.htpasswd` file will be looked up in
+                                     configuration directory and if found then
+                                     authorization will be enabled implicitly.
+                                     Providing this option enables htpasswd
+                                     based authorization explicitly. When making
+                                     requests use Basic auth to authorize.
 Utils for configuration maintenance
     -l, --[no-]list                  List all endpoints
     -k, --[no-]check                 Load configuration and exit
-    -s, --send ENDPOINT              Send data to specified ENDPOINT and exit. Requires --data to be set.
-        --preview                    Print rendering result to STDOUT and exit. Use with send
-        --data DATA                  Data to send with --send flag. Json string or @filename.
+    -s, --send ENDPOINT              Send data to specified ENDPOINT and exit.
+                                     Requires --data to be set.
+        --preview                    Print rendering result to STDOUT and exit.
+                                     Use with --send.
+        --data DATA                  Data to send with --send flag. Json string
+                                     or @filename.
+Auth utils
+        --add-auth USER:PASSWORD     Add auth entry to .htpasswd file. By
+                                     default pechkin.htpasswd from configuration
+                                     directory will be used. Use --auth-file to
+                                     specify other file to update. If file does
+                                     not exist it will be created.
 Debug options
-        --[no-]debug                 Print debug information and stack trace on errors
+        --[no-]debug                 Print debug information and stack trace on
+                                     errors
 
 Common options:
     -h, --help                       Show this message
         --version                    Show version
+
 ```
 
 ## Other notes

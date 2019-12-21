@@ -107,7 +107,7 @@ module Pechkin
 
     opt :log_dir, names: ['--log-dir [DIR]'],
                   desc: 'Path to log directory. Output will be writen to'  \
-                        'pechkin.log file. If not specified will write to' \
+                        'pechkin.log file. If not specified will write to ' \
                         'STDOUT'
     opt :htpasswd, names: ['--auth-file FILE'],
                    desc: 'Path to .htpasswd file. By default ' \
@@ -129,7 +129,7 @@ module Pechkin
                           'Requires --data to be set.'
     opt :preview,   names: ['--preview'],
                     desc: 'Print rendering result to STDOUT and exit. ' \
-                          'Use with send'
+                          'Use with --send'
     opt :data, names: ['--data DATA'],
                desc: 'Data to send with --send flag. Json string or @filename.'
 
