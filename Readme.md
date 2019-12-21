@@ -111,6 +111,28 @@ of this field is direct mapping for `attachments` field in Slack API. See
 [documentation](https://api.slack.com/docs/message-attachments) for more
 details.
 
+## Authorization
+
+Pechkin can make simple request authorization. If configuration directory
+contains `pechkin.htpasswd` file or path to `*.htpasswd` file provided via CLI
+options pechkin will use it to check Authorization header against it. Pechkin
+check Basic-Auth at the moment.
+
+To create `.htpasswd` file one can use `--add-auth` flag to create or update
+htpasswd file with provided credentials. For example
+
+```
+# Create or update pechkin.htpasswd file in examples/ directory with user
+# root and password root123
+pechkin -c examples --add-user root:root123
+
+# Create or update pechkin-global.htpasswd file at /etc/config
+pechkin --add-user root:root123 --auth-file /etc/config/pechkin-global.htpasswd
+
+# Launch pechkin with explicitly provided htpasswd file
+pechkin -c examples --auth-file /etc/config/pechkin-global.htpasswd
+```
+
 ## Wrapping up
 
 Create bot file `bots/marvin.yml`
