@@ -17,6 +17,20 @@ short:
 * When pechkin started process any POST request and acts according to your
   instrcutions
 
+# Table of Contents
+
+- [Configuration basics](#configuration-basics)
+  - [Bots](#bots)
+  - [Channels](#channels)
+  - [Messages](#messages)
+    - [Message values substitution](#message-values-subsitution)
+    - [Connector speceific parameters](#connector-speceific-parameters)
+  - [Authorization](#authorization)
+  - [Wrapping up](#wrapping-up)
+  - [CLI Options](#cli-options)
+  - [Other notes](#other-notes)
+
+
 # Configuration basics
 
 ## Bots
@@ -79,7 +93,7 @@ channels but with sligthly different parameters. It may be `repository_base_url`
 wich you want to override for each channel separately. `variables` content will
 be merged with received data. So data can override variable parameters too.
 
-### Message values substitutions
+### Message values substitution
 
 As well as you can inject variable parameters into template data through
 `variables` field in message configuration you also can substitute some values
@@ -199,7 +213,7 @@ Check metrics:
 curl localhost:8080/metrics
 ```
 
-## Startup options
+## CLI options
 
 ```
 Usage: pechkin [options]
