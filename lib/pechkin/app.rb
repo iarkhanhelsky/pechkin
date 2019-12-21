@@ -11,7 +11,11 @@ module Pechkin
       Rack::Builder.app do
         use Rack::CommonLogger, logger
         use Rack::Deflater
-        use Pechkin::Auth::Middleware, working_dir: options.config_file
+        # Add Auth check if found htpasswd file or it was excplicitly provided
+        # See CLI class for configuration details
+        if options.htpasswd
+          use Pechkin::Auth::Middleware, auth_file: options.htpasswd
+        end
         use Prometheus::Middleware::Collector, registry: prometheus
         use Prometheus::Middleware::Exporter, registry: prometheus
 

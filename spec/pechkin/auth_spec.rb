@@ -4,12 +4,13 @@ module Pechkin
       before(:all) do
         # admin:admin
         htpasswd_content = 'admin:$apr1$01Qu1Wqq$ODnwSVr.yfRH6zsJ1UFOb.'
-        @dir = Dir.mktmpdir
-        IO.write(File.join(@dir, PECHKIN_HTPASSWD_FILE), htpasswd_content)
+        @htpasswd_file = Tempfile.new(['pechkin-', '.htpasswd'])
+        @htpasswd_file.write(htpasswd_content + "\n")
+        @htpasswd_file.close
       end
 
       let(:app) { double }
-      let(:middleware) { Middleware.new(app, working_dir: @dir) }
+      let(:middleware) { Middleware.new(app, auth_file: @htpasswd_file.path) }
 
       it 'fails to authorize if Authorization header is missing' do
         env = {}
@@ -43,7 +44,7 @@ module Pechkin
       end
 
       after(:all) do
-        FileUtils.rm_rf(@dir) if File.exist?(@dir)
+        @htpasswd_file.unlink
       end
     end
   end

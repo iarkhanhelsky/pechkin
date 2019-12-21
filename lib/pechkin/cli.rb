@@ -43,7 +43,7 @@ module Pechkin
         exit 2
       else
         parser.parse(args)
-        values
+        new.post_init(values)
       end
     end
 
@@ -89,6 +89,9 @@ module Pechkin
 
   # Command Line Parser Builder
   class CLI
+    # Default file name for htpasswd file with auth credentials
+    PECHKIN_HTPASSWD_FILE = 'pechkin.htpasswd'.freeze
+
     extend CLIHelper
 
     separator 'Run options'
@@ -106,6 +109,14 @@ module Pechkin
                   desc: 'Path to log directory. Output will be writen to'  \
                         'pechkin.log file. If not specified will write to' \
                         'STDOUT'
+    opt :htpasswd, names: ['--auth-file FILE'],
+                   desc: 'Path to .htpasswd file. By default ' \
+                         '`pechkin.htpasswd` file will be looked up in ' \
+                         'configuration directory and if found then ' \
+                         'authorization will be enabled implicitly. ' \
+                         'Providing this option enables htpasswd based ' \
+                         'authorization explicitly. When making requests use ' \
+                         'Basic auth to authorize.'
 
     separator 'Utils for configuration maintenance'
     opt :list?, names: ['-l', '--[no-]list'],
@@ -123,11 +134,24 @@ module Pechkin
                desc: 'Data to send with --send flag. Json string or @filename.'
 
     separator 'Auth utils'
-    opt :auth, names: ['--add-auth USER:PASSWORD'],
-               desc: 'Add auth entry to .htpasswd file.'
+    opt :add_auth, names: ['--add-auth USER:PASSWORD'],
+                   desc: 'Add auth entry to .htpasswd file. By default ' \
+                         'pechkin.htpasswd from configuration directory ' \
+                         'will be used. Use --auth-file to specify other ' \
+                         'file to update. If file does not exist it will be ' \
+                         'created.'
 
     separator 'Debug options'
     opt :debug?, names: ['--[no-]debug'],
                  desc: 'Print debug information and stack trace on errors'
+
+    def post_init(values)
+      default_htpasswd = File.join(values.config_file, PECHKIN_HTPASSWD_FILE)
+      if values.htpasswd.nil? && File.exist?(default_htpasswd)
+        values.htpasswd = default_htpasswd
+      end
+
+      values
+    end
   end
 end

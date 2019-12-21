@@ -1,6 +1,6 @@
 require 'webmock/rspec'
 require 'rack/test'
 require 'powerpack/string'
-require 'tmpdir'
+require 'tempfile'
 require 'fileutils'
 require 'pechkin'

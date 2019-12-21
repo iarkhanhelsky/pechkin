@@ -1,11 +1,10 @@
 module Pechkin
   module Auth
-    PECHKIN_HTPASSWD_FILE = 'pechkin.htpasswd'.freeze
     # Utility class for altering htpasswd files
     class Manager
       attr_reader :htpasswd
-      def initialize(working_dir)
-        @htpasswd = File.join(working_dir, PECHKIN_HTPASSWD_FILE)
+      def initialize(htpasswd)
+        @htpasswd = htpasswd
       end
 
       def add(user, password)
@@ -20,9 +19,8 @@ module Pechkin
     class Middleware
       attr_reader :htpasswd
 
-      def initialize(app, working_dir:)
-        file_path = File.join(working_dir, PECHKIN_HTPASSWD_FILE)
-        @htpasswd = HTAuth::PasswdFile.open(file_path) if File.exist?(file_path)
+      def initialize(app, auth_file:)
+        @htpasswd = HTAuth::PasswdFile.open(auth_file)
         @app = app
       end
 

@@ -37,18 +37,21 @@ module Pechkin # :nodoc:
 
     def initialize(options)
       @options = options
-      @configuration = Configuration.load_from_directory(options.config_file)
-      @handler = Handler.new(@configuration.channels)
     end
 
     def run
+      if options.add_auth
+        add_auth
+        exit 0
+      end
+
+      @configuration = Configuration.load_from_directory(options.config_file)
+      @handler = Handler.new(@configuration.channels)
       configuration.list if options.list?
-      exit 0 if options.check?
+      return if options.check?
 
       if options.send_data
         send_data
-      elsif options.auth
-        add_auth
       else
         run_server
       end
@@ -86,8 +89,9 @@ module Pechkin # :nodoc:
     end
 
     def add_auth
-      user, password = options.auth.split(':')
-      Pechkin::Auth::Manager.new(options.config_file).add(user, password)
+      user, password = options.add_auth.split(':')
+      Pechkin::Auth::Manager.new(options.htpasswd).add(user, password)
+      puts IO.read(options.htpasswd)
     end
   end
 end
