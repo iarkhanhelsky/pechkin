@@ -147,9 +147,7 @@ module Pechkin
 
     def post_init(values)
       default_htpasswd = File.join(values.config_file, PECHKIN_HTPASSWD_FILE)
-      if values.htpasswd.nil? && File.exist?(default_htpasswd)
-        values.htpasswd = default_htpasswd
-      end
+      values.htpasswd ||= default_htpasswd
 
       values
     end

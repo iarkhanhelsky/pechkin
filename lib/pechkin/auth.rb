@@ -20,7 +20,7 @@ module Pechkin
       attr_reader :htpasswd
 
       def initialize(app, auth_file:)
-        @htpasswd = HTAuth::PasswdFile.open(auth_file)
+        @htpasswd = HTAuth::PasswdFile.open(auth_file) if File.exist?(auth_file)
         @app = app
       end
 
