@@ -1,4 +1,4 @@
-# New
+# 1.1.0
 
 * Metrics: Add metric `pechkin_start_time_seconds` with startup timestamp
 * UX: Add missing space to CLI option description

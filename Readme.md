@@ -28,7 +28,7 @@ short:
   - [Authorization](#authorization)
   - [Wrapping up](#wrapping-up)
   - [CLI Options](#cli-options)
-  - [Other notes](#other-notes)
+  - [Metrics](#metrics)
 
 
 # Configuration basics
@@ -256,7 +256,9 @@ Common options:
 
 ```
 
-## Other notes
+## Metrics
 
-* Pechkin is bundled with prometheus client, all metrics available
-  on `/metrics` endpoint.
+Pechkin uses prometheus ruby client to expose basic rack server metrics. And own
+metrics as well:
+
+* `pechkin_start_time_seconds` - startup timestamp
