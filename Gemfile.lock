@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pechkin (1.0.3)
+    pechkin (1.1.0)
       grape (= 1.1.0)
       htauth (= 2.0.0)
       prometheus-client (= 1.0.0)
@@ -96,7 +96,7 @@ GEM
     safe_yaml (1.0.4)
     thor (0.20.0)
     thread_safe (0.3.6)
-    tzinfo (1.2.5)
+    tzinfo (1.2.6)
       thread_safe (~> 0.1)
     unicode-display_width (1.4.0)
     virtus (1.0.5)
@@ -123,4 +123,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.3
+   2.1.4
