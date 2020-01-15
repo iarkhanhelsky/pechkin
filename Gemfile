@@ -1,7 +1,6 @@
 gemspec
 
 group :dev do
-  gem 'grably'
   gem 'powerpack'
   gem 'rack-test'
   gem 'rspec'
