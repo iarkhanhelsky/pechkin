@@ -24,7 +24,7 @@ short:
   - [Channels](#channels)
   - [Messages](#messages)
     - [Message values substitution](#message-values-subsitution)
-    - [Connector speceific parameters](#connector-speceific-parameters)
+    - [Connector specific parameters](#connector-specific-parameters)
   - [Authorization](#authorization)
   - [Wrapping up](#wrapping-up)
   - [CLI Options](#cli-options)
@@ -111,7 +111,7 @@ slack_attachments:
 
 No value processing is supported.
 
-### Connector speceific parameters
+### Connector specific parameters
 
 *Telegram*:
 
@@ -129,8 +129,8 @@ details.
 
 Pechkin can make simple request authorization. If configuration directory
 contains `pechkin.htpasswd` file or path to `*.htpasswd` file provided via CLI
-options pechkin will use it to check Authorization header against it. Pechkin
-check Basic-Auth at the moment.
+options pechkin will use it to check `Authorization` header against it. Pechkin
+checks only `Basic Auth` at the moment.
 
 To create `.htpasswd` file one can use `--add-auth` flag to create or update
 htpasswd file with provided credentials. For example
