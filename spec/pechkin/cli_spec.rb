@@ -2,7 +2,7 @@ module Pechkin
   describe CLI do
     context 'when config file is provided' do
       it do
-        expect(CLI.parse(%w[-c test.yml]).config_file).to eq('test.yml')
+        expect(CLI.parse(%w[-c test.yml]).config_dir).to eq('test.yml')
       end
     end
 

@@ -96,9 +96,9 @@ module Pechkin
 
     separator 'Run options'
 
-    opt :config_file, default: Dir.pwd,
-                      names: ['-c', '--config-dir FILE'],
-                      desc: 'Path to configuration file'
+    opt :config_dir, default: Dir.pwd,
+                     names: ['-c', '--config-dir FILE'],
+                     desc: 'Path to configuration file'
 
     opt :port, names: ['--port PORT'], default: 9292, type: Integer
 
@@ -146,7 +146,7 @@ module Pechkin
                  desc: 'Print debug information and stack trace on errors'
 
     def post_init(values)
-      default_htpasswd = File.join(values.config_file, PECHKIN_HTPASSWD_FILE)
+      default_htpasswd = File.join(values.config_dir, PECHKIN_HTPASSWD_FILE)
       values.htpasswd ||= default_htpasswd
 
       values

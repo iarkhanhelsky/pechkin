@@ -9,7 +9,8 @@ module Pechkin
       end
 
       def configuration
-        @configuration ||= Configuration.load_from_directory(options.config_file)
+        config_dir = options.config_dir
+        @configuration ||= Configuration.load_from_directory(config_dir)
       end
 
       def handler
