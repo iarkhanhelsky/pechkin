@@ -101,6 +101,8 @@ module Pechkin
                       desc: 'Path to configuration file'
 
     opt :port, names: ['--port PORT'], default: 9292, type: Integer
+    opt :bind_address, names: ['--address ADDRESS'], default: '127.0.0.1',
+                       desc: 'The host address to bind to '
 
     opt :pid_file, names: ['-p', '--pid-file [FILE]'],
                    desc: 'Path to output PID file'

@@ -59,7 +59,9 @@ module Pechkin # :nodoc:
 
     def run_server
       Rack::Server.start(app: AppBuilder.new.build(handler, options),
-                         Port: options.port, pid:  options.pid_file)
+                         Port: options.port,
+                         pid: options.pid_file,
+                         Host: options.bind_address)
     end
 
     def send_data
