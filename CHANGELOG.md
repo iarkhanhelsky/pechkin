@@ -1,3 +1,7 @@
+# 1.2.0
+
+* Add bind address support
+
 # 1.1.0
 
 * Metrics: Add metric `pechkin_start_time_seconds` with startup timestamp
