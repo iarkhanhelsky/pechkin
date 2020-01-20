@@ -32,6 +32,12 @@ module Pechkin
       end
     end
 
+    context 'when bind addres is provided' do
+      it do
+        expect(CLI.parse(%w[--address 0.0.0.0]).bind_address).to eq('0.0.0.0')
+      end
+    end
+
     context 'when pid file is requested (long)' do
       it do
         expect(CLI.parse(%w[-c test.yml --pid-file app.pid]).pid_file)
