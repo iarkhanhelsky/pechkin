@@ -1,4 +1,4 @@
-require_relative 'command/base_command'
+require_relative 'command/base'
 
 require_relative 'command/add_auth'
 require_relative 'command/list'
@@ -9,7 +9,10 @@ require_relative 'command/send_data'
 module Pechkin
   # Contains general command processing.
   module Command
-    # Dispatch command
+    # Dispatch command. Commands are placed in fixed order to allow matching
+    # rules be executed in right way. For example at first we check for
+    # --add-auth and than for --check. At the moment only RunServer should be
+    # last element of this sequence.
     class Dispatcher
       COMMANDS = [
         AddAuth,

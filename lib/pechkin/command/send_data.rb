@@ -2,7 +2,7 @@ module Pechkin
   module Command
     # Send data to channel and exit. Uses --preview flag to render message and
     # flush it to STDOUT before sending
-    class SendData < BaseCommand
+    class SendData < Base
       def matches?
         options.send_data
       end

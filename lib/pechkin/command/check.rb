@@ -1,7 +1,7 @@
 module Pechkin
   module Command
     # Check configuration consistency and exit.
-    class Check < BaseCommand
+    class Check < Base
       def matches?
         options.check?
       end

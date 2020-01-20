@@ -2,7 +2,7 @@ module Pechkin
   module Command
     # Read user:password combination and write it to htpasswd file. If file
     # already contains user then record will be replaced
-    class AddAuth < BaseCommand
+    class AddAuth < Base
       def matches?
         options.add_auth
       end

@@ -1,7 +1,7 @@
 module Pechkin
   module Command
     # Start pechkin HTTP server
-    class RunServer < BaseCommand
+    class RunServer < Base
       def matches?
         true # Always match
       end

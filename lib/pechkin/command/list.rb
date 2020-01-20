@@ -1,7 +1,7 @@
 module Pechkin
   module Command
     # List channels configuration
-    class List < BaseCommand
+    class List < Base
       def matches?
         options.list?
       end
