@@ -22,7 +22,7 @@ module Pechkin
       end
 
       context 'when cli contains --send' do
-        let(:cli) { CLI.parse(%w[--send /some/endpoint]) }
+        let(:cli) { CLI.parse(%w[--send some/endpoint]) }
         it { expect(Dispatcher.new(cli).dispatch).to be_a(SendData) }
       end
 

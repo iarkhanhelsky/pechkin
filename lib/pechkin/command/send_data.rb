@@ -30,7 +30,7 @@ module Pechkin
       end
 
       def parse_endpoint(endpoint)
-        endpoint.match(%r{^([^/]+)/(.+)}) do |m|
+        endpoint.match(%r{^([^/]+)/(.+)$}) do |m|
           [m[1], m[2]]
         end
       end
