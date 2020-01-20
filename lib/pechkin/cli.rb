@@ -38,13 +38,8 @@ module Pechkin
       values = OpenStruct.new
       parser = parser_create(values)
 
-      if args.empty?
-        puts parser.help
-        exit 2
-      else
-        parser.parse(args)
-        new.post_init(values)
-      end
+      parser.parse(args)
+      new.post_init(values)
     end
 
     def parser_create(values)

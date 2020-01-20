@@ -31,7 +31,7 @@ module Pechkin
 
       # Dispatch command according to provided options
       def dispatch
-        COMMANDS.map { |c| c.new(options) }.find(&:matches?).execute
+        COMMANDS.map { |c| c.new(options) }.find(&:matches?)
       end
     end
   end
