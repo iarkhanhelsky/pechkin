@@ -6,7 +6,7 @@ module Pechkin
       context 'when receives non existend channel and message' do
         it do
           opt = OpenStruct.new(send_data: 'channel/message')
-          cmd = SendData.new(opt)
+          cmd = SendData.new(opt, stdout: StringIO.new, stderr: StringIO.new)
 
           expect(cmd).to receive_message_chain(:handler, :message?)
             .with('channel', 'message')
@@ -16,46 +16,72 @@ module Pechkin
         end
       end
 
-      it do
-        opt = OpenStruct.new(send_data: 'channel/message',
-                             data: '{"hello":"world"}',
-                             preview: true)
-        cmd = SendData.new(opt)
-        handler = double
+      context 'when data is json string' do
+        it do
+          opt = OpenStruct.new(send_data: 'channel/message',
+                               data: '{"hello":"world"}',
+                               preview: false)
+          cmd = SendData.new(opt, stdout: StringIO.new, stderr: StringIO.new)
+          handler = double
 
-        expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
-        expect(handler).to receive(:message?)
-          .with('channel', 'message')
-          .and_return(true)
-        expect(handler).to receive(:'preview=').with(true)
-        expect(cmd).to receive_message_chain(:handler, :handle)
-          .with('channel', 'message', 'hello' => 'world')
+          expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
+          expect(handler).to receive(:message?)
+            .with('channel', 'message')
+            .and_return(true)
 
-        cmd.execute
+          expect(cmd).to receive_message_chain(:handler, :handle)
+            .with('channel', 'message', 'hello' => 'world')
+            .and_return([])
+
+          cmd.execute
+        end
       end
 
-      it do
-        data_file = Tempfile.new
-        data_file.write({ hello: 'world' }.to_json)
-        data_file.close
+      context 'when preview mode' do
+        it do
+          opt = OpenStruct.new(send_data: 'channel/message',
+                               data: '{"hello":"world"}',
+                               preview: true)
 
-        opt = OpenStruct.new(send_data: 'channel/message',
-                             data: "@#{data_file.path}",
-                             preview: true)
-        cmd = SendData.new(opt)
-        handler = double
+          cmd = SendData.new(opt, stdout: StringIO.new, stderr: StringIO.new)
+          handler = double
 
-        expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
-        expect(handler).to receive(:message?)
-          .with('channel', 'message')
-          .and_return(true)
-        expect(handler).to receive(:'preview=').with(true)
-        expect(cmd).to receive_message_chain(:handler, :handle)
-          .with('channel', 'message', 'hello' => 'world')
+          expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
+          expect(handler).to receive(:message?)
+            .with('channel', 'message')
+            .and_return(true)
+          expect(cmd).to receive_message_chain(:handler, :preview)
+            .with('channel', 'message', 'hello' => 'world')
 
-        cmd.execute
+          cmd.execute
+        end
+      end
 
-        data_file.unlink
+      context 'when data is path to file' do
+        it do
+          data_file = Tempfile.new
+          data_file.write({ hello: 'world' }.to_json)
+          data_file.close
+
+          opt = OpenStruct.new(send_data: 'channel/message',
+                               data: "@#{data_file.path}",
+                               preview: false)
+          cmd = SendData.new(opt, stdout: StringIO.new, stderr: StringIO.new)
+          handler = double
+
+          expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
+          expect(handler).to receive(:message?)
+            .with('channel', 'message')
+            .and_return(true)
+
+          expect(cmd).to receive_message_chain(:handler, :handle)
+            .with('channel', 'message', 'hello' => 'world')
+            .and_return([])
+
+          cmd.execute
+
+          data_file.unlink
+        end
       end
     end
   end

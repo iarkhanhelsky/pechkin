@@ -3,7 +3,6 @@ module Pechkin
   # services. Can skip some requests acording to filters.
   class Handler
     attr_reader :channels
-    attr_writer :preview
 
     def initialize(channels)
       @channels = channels
@@ -13,6 +12,7 @@ module Pechkin
     # message id, and data object. By channel id we determine where to send
     # data, by message id we determine how to transform this data to real
     # message.
+    #
     # @param channel_id [String] channel name from configuration. This name is
     #  obtained from directory structure we have in configuration directory.
     # @param msg_id [String] message name from configuration. This name is
@@ -33,19 +33,38 @@ module Pechkin
 
       chats = channel_config.chat_ids
       connector = channel_config.connector
-      if preview?
-        connector.preview(chats, text, message_config)
-      else
-        chats.map { |chat| connector.send_message(chat, text, message_config) }
-      end
+
+      chats.map { |chat| connector.send_message(chat, text, message_config) }
+    end
+
+    # Executes message handling and renders template using connector logic
+    #
+    # @param channel_id [String] channel name from configuration. This name is
+    #  obtained from directory structure we have in configuration directory.
+    # @param msg_id [String] message name from configuration. This name is
+    #  references yml file with message description
+    # @param data [Object] data object to render via template. This is usualy
+    #  deserialized json.
+    # @see Configuration
+    def preview(channel_id, msg_id, data)
+      channel_config = fetch_channel(channel_id)
+      # Find message and try substitute values to message parameters.
+      message_config = substitute(data, fetch_message(channel_config, msg_id))
+
+      data = (message_config['variables'] || {}).merge(data)
+      template = message_config['template']
+
+      text = ''
+      text = template.render(data) unless template.nil?
+
+      chats = channel_config.chat_ids
+      connector = channel_config.connector
+
+      connector.preview(chats, text, message_config)
     end
 
     def message?(channel_id, msg_id)
       channels.key?(channel_id) && channels[channel_id].messages.key?(msg_id)
-    end
-
-    def preview?
-      @preview
     end
 
     private

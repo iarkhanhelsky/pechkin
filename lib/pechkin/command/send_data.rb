@@ -14,19 +14,26 @@ module Pechkin
 
         data = read_data(options.data)
 
-        handler.preview = options.preview
-        handler.handle(ch, msg, JSON.parse(data))
+        if options.preview
+          puts handler.preview(ch, msg, data)
+        else
+          handler.handle(ch, msg, data).each do |e|
+            puts "* #{e.inspect}"
+          end
+        end
       end
 
       private
 
       def read_data(data)
-        return data unless data.start_with?('@')
-
-        file = data[1..-1]
-        raise "File not found #{file}" unless File.exist?(file)
-
-        IO.read(file)
+        d = if data.start_with?('@')
+              file = data[1..-1]
+              raise "File not found #{file}" unless File.exist?(file)
+              IO.read(file)
+            else
+              data
+            end
+        JSON.parse(d)
       end
 
       def parse_endpoint(endpoint)

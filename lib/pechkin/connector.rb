@@ -10,8 +10,8 @@ module Pechkin
     def send_message(chat, message, message_desc); end
 
     def preview(chats, message, _message_desc)
-      puts "Connector: #{self.class.name}; Chats: #{chats.join(', ')}\n"
-      puts "Message:\n#{message}"
+      "Connector: #{self.class.name}; Chats: #{chats.join(', ')}\n" \
+      "Message:\n#{message}"
     end
 
     def post_data(url, data, headers: {})
