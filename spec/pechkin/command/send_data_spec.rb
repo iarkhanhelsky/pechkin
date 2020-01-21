@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module Pechkin
   module Command
     describe SendData do
@@ -30,6 +32,30 @@ module Pechkin
           .with('channel', 'message', 'hello' => 'world')
 
         cmd.execute
+      end
+
+      it do
+        data_file = Tempfile.new
+        data_file.write({ hello: 'world' }.to_json)
+        data_file.close
+
+        opt = OpenStruct.new(send_data: 'channel/message',
+                             data: "@#{data_file.path}",
+                             preview: true)
+        cmd = SendData.new(opt)
+        handler = double
+
+        expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
+        expect(handler).to receive(:message?)
+          .with('channel', 'message')
+          .and_return(true)
+        expect(handler).to receive(:'preview=').with(true)
+        expect(cmd).to receive_message_chain(:handler, :handle)
+          .with('channel', 'message', 'hello' => 'world')
+
+        cmd.execute
+
+        data_file.unlink
       end
     end
   end
