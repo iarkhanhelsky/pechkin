@@ -21,16 +21,8 @@ module Pechkin
     #  deserialized json.
     # @see Configuration
     def handle(channel_id, msg_id, data)
-      channel_config = fetch_channel(channel_id)
-      # Find message and try substitute values to message parameters.
-      message_config = substitute(data, fetch_message(channel_config, msg_id))
-
-      data = (message_config['variables'] || {}).merge(data)
-      template = message_config['template']
-
-      text = ''
-      text = template.render(data) unless template.nil?
-
+      channel_config, message_config, text =
+        prepare_message(channel_id, msg_id, data)
       chats = channel_config.chat_ids
       connector = channel_config.connector
 
@@ -47,16 +39,8 @@ module Pechkin
     #  deserialized json.
     # @see Configuration
     def preview(channel_id, msg_id, data)
-      channel_config = fetch_channel(channel_id)
-      # Find message and try substitute values to message parameters.
-      message_config = substitute(data, fetch_message(channel_config, msg_id))
-
-      data = (message_config['variables'] || {}).merge(data)
-      template = message_config['template']
-
-      text = ''
-      text = template.render(data) unless template.nil?
-
+      channel_config, message_config, text =
+        prepare_message(channel_id, msg_id, data)
       chats = channel_config.chat_ids
       connector = channel_config.connector
 
@@ -82,6 +66,20 @@ module Pechkin
       raise MessageNotFoundError, msg_id unless message_list.key?(msg_id)
 
       message_list[msg_id]
+    end
+
+    def prepare_message(channel_id, msg_id, data)
+      channel_config = fetch_channel(channel_id)
+      # Find message and try substitute values to message parameters.
+      message_config = substitute(data, fetch_message(channel_config, msg_id))
+
+      data = (message_config['variables'] || {}).merge(data)
+      template = message_config['template']
+
+      text = ''
+      text = template.render(data) unless template.nil?
+
+      [channel_config, message_config, text]
     end
 
     def substitute(data, message_desc)
