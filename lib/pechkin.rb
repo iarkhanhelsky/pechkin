@@ -3,6 +3,7 @@ require 'rack'
 require 'logger'
 require 'prometheus/middleware/collector'
 require 'prometheus/middleware/exporter'
+require 'powerpack/string'
 require 'htauth'
 require 'base64'
 

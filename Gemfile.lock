@@ -4,6 +4,7 @@ PATH
     pechkin (1.2.0)
       grape (= 1.1.0)
       htauth (= 2.0.0)
+      powerpack (= 0.1.2)
       prometheus-client (= 1.0.0)
       rack (= 2.0.8)
 
