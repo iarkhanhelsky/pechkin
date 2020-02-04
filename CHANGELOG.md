@@ -1,3 +1,7 @@
+# 1.2.2
+
+* Bind address was not actualy bound
+
 # 1.2.1
 
 * Fix pechkin error when auth header contains invalid content.

@@ -8,7 +8,7 @@ module Pechkin
 
       def execute
         Rack::Server.start(app: AppBuilder.new.build(handler, options),
-                           Host: options.bind_adress,
+                           Host: options.bind_address,
                            Port: options.port,
                            pid: options.pid_file)
       end
