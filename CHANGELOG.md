@@ -1,3 +1,9 @@
+# 1.2.1
+
+* Fix pechkin error when auth header contains invalid content.
+* Add auth error messages
+* Remove debug oputput from Auth Middleware
+
 # 1.2.0
 
 * Add bind address support
