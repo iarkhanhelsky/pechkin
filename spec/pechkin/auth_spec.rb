@@ -14,24 +14,56 @@ module Pechkin
 
       it 'fails to authorize if Authorization header is missing' do
         env = {}
-        expect(middleware.call(env).first).to eq('401')
+        code, _header, body = middleware.call(env)
+        expect(code).to eq('401')
+        expect(body.first)
+          .to eq({ status: 'error', reason: 'Auth header is missing' }.to_json)
       end
 
       it 'fails to authorize if Authorization is not Basic' do
         env = { 'HTTP_AUTHORIZATION' => 'Bearer aoch7Ref5aiku7aM' }
-        expect(middleware.call(env).first).to eq('401')
+        code, _header, body = middleware.call(env)
+        expect(code).to eq('401')
+        expect(body.first)
+          .to eq({ status: 'error', reason: 'Auth is not basic' }.to_json)
+      end
+
+      it 'fails to authorize if Auth header contains only user field' do
+        auth = Base64.encode64('admin')
+        env = { 'HTTP_AUTHORIZATION' => "Basic #{auth}" }
+        code, _header, body = middleware.call(env)
+        expect(code).to eq('401')
+        expect(body.first)
+          .to eq({ status: 'error', reason: 'Password is missing' }.to_json)
+      end
+
+      it 'fails to authorize if Auth header contains empty auth string' do
+        auth = Base64.encode64('')
+        env = { 'HTTP_AUTHORIZATION' => "Basic #{auth}" }
+        code, _header, body = middleware.call(env)
+        expect(code).to eq('401')
+        expect(body.first)
+          .to eq({ status: 'error', reason: 'User is missing' }.to_json)
       end
 
       it 'fails to authorize if user doesn\'t match' do
         auth = Base64.encode64('root:admin')
         env = { 'HTTP_AUTHORIZATION' => "Basic #{auth}" }
-        expect(middleware.call(env).first).to eq('401')
+        code, _header, body = middleware.call(env)
+        expect(code).to eq('401')
+
+        error = "User \'root\' not found"
+        expect(body.first)
+          .to eq({ status: 'error', reason: error }.to_json)
       end
 
       it 'fails to authorize if password doesn\'t match' do
         auth = Base64.encode64('admin:admin123')
         env = { 'HTTP_AUTHORIZATION' => "Basic #{auth}" }
-        expect(middleware.call(env).first).to eq('401')
+        code, _header, body = middleware.call(env)
+        expect(code).to eq('401')
+        expect(body.first)
+          .to eq({ status: 'error', reason: "Can't authenticate" }.to_json)
       end
 
       it 'calls app if auth matching' do

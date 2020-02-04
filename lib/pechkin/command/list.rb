@@ -1,5 +1,8 @@
 module Pechkin
   module Command
+    BOT_ENTRY_FORMAT = '  %-25s   %-10s   %-60s '.freeze
+    CHAT_ENTRY_FORMAT = '  %-40s   %-40s   %-30s '.freeze
+
     # List channels configuration
     class List < Base
       def matches?
@@ -18,21 +21,20 @@ module Pechkin
 
       def print_bots(bots)
         puts "\nBots:"
+        puts format(BOT_ENTRY_FORMAT, 'NAME', 'CONNECTOR', 'TOKEN')
         bots.each do |name, bot|
-          puts "  #{name}(#{bot.connector}): #{bot.token}"
+          puts format(BOT_ENTRY_FORMAT, name, bot.connector, bot.token)
         end
       end
 
       def print_channels(channels)
         puts "\nChannels:"
+        puts format(CHAT_ENTRY_FORMAT, 'CHANNEL', 'MESSAGE', 'BOT')
         channels.each do |channel_name, channel|
-          puts "  - name #{channel_name}"
-          puts "    bot: #{channel.connector.name}"
-          puts '    messages: '
           channel.messages.each do |message_name, _message|
-            puts "     - /#{channel_name}/#{message_name}"
+            puts format(CHAT_ENTRY_FORMAT,
+                        channel_name, message_name, channel.connector.name)
           end
-          puts
         end
       end
     end

@@ -1,5 +1,7 @@
 module Pechkin
   module Auth
+    class AuthError < StandardError; end
+
     # Utility class for altering htpasswd files
     class Manager
       attr_reader :htpasswd
@@ -25,32 +27,41 @@ module Pechkin
       end
 
       def call(env)
-        if authorized?(env)
-          @app.call(env)
-        else
-          body = { status: 'error', reason: 'unathorized' }.to_json
-          ['401', { 'Content-Type' => 'application/json' }, [body]]
-        end
+        authorize(env)
+        @app.call(env)
+      rescue AuthError => e
+        body = { status: 'error', reason: e.message }.to_json
+        ['401', { 'Content-Type' => 'application/json' }, [body]]
       rescue StandardError => e
-        puts e.backtrace.reverse.join('\n\t')
         body = { status: 'error', reason: e.message }.to_json
         ['503', { 'Content-Type' => 'application/json' }, [body]]
       end
 
       private
 
-      def authorized?(env)
-        return true unless htpasswd
+      def authorize(env)
+        return unless htpasswd
 
-        auth = env['HTTP_AUTHORIZATION'] || ''
-        auth.match(/^Basic (.+)$/) do |m|
-          check_auth(*Base64.decode64(m[1]).split(':'))
-        end
+        auth = env['HTTP_AUTHORIZATION']
+        raise AuthError, 'Auth header is missing' unless auth
+
+        match = auth.match(/^Basic (.*)$/)
+        raise AuthError, 'Auth is not basic' unless match
+
+        user, password = *Base64.decode64(match[1]).split(':')
+        check_auth(user, password)
       end
 
       def check_auth(user, password)
+        raise AuthError, 'User is missing' unless user
+
+        raise AuthError, 'Password is missing' unless password
+
         e = htpasswd.fetch(user)
-        e && e.authenticated?(password)
+
+        raise AuthError, "User '#{user}' not found" unless e
+
+        raise AuthError, "Can't authenticate" unless e.authenticated?(password)
       end
     end
   end

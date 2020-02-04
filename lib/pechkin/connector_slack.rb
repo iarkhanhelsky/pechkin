@@ -13,7 +13,8 @@ module Pechkin # :nodoc:
       attachments = message_desc['slack_attachments'] || {}
 
       if text.strip.empty? && attachments.empty?
-        return [channel, 400, 'Internal error: message is empty']
+        return { channel: channel, code: 400,
+                 response: 'Internal error: message is empty' }
       end
 
       params = { channel: channel, text: text, attachments: attachments }
@@ -21,7 +22,7 @@ module Pechkin # :nodoc:
       url = 'https://slack.com/api/chat.postMessage'
       response = post_data(url, params, headers: @headers)
 
-      [channel, response.code.to_i, response.body]
+      { channel: channel, code: response.code.to_i, response: response.body }
     end
   end
 end

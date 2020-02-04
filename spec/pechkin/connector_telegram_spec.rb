@@ -17,7 +17,7 @@ module Pechkin
           .with(request_url, data).and_return(response)
 
         expect(connector.send_message(1234, 'Hello', {}))
-          .to eq([1234, 200, 'OK'])
+          .to eq(chat_id: 1234, code: 200, response: 'OK')
       end
 
       it 'telegram_parse_mode overrides parse_mode value' do
@@ -27,7 +27,7 @@ module Pechkin
 
         message_desc = { 'telegram_parse_mode' => 'markdown' }
         expect(connector.send_message(1234, 'Hello', message_desc))
-          .to eq([1234, 200, 'OK'])
+          .to eq(chat_id: 1234, code: 200, response: 'OK')
       end
     end
   end

@@ -2,7 +2,8 @@ module Pechkin
   describe App do
     include Rack::Test::Methods
 
-    let(:app) { App.new }
+    let(:logger) { double }
+    let(:app) { App.new(logger) }
     let(:handler) { double }
 
     before(:each) do
@@ -12,6 +13,8 @@ module Pechkin
 
     context 'GET is not allowed' do
       it do
+        expect(logger).to receive(:error).with(anything)
+
         get '/foo/bar'
         expect(last_response.status).to eq(405)
       end
@@ -19,6 +22,8 @@ module Pechkin
 
     context 'HEAD is not allowed' do
       it do
+        expect(logger).to receive(:error).with(anything)
+
         head '/foo/bar'
         expect(last_response.status).to eq(405)
       end
@@ -26,6 +31,8 @@ module Pechkin
 
     context 'DELETE is not allowed' do
       it do
+        expect(logger).to receive(:error).with(anything)
+
         delete '/foo/bar'
         expect(last_response.status).to eq(405)
       end
@@ -33,6 +40,8 @@ module Pechkin
 
     context 'OPTIONS is not allowed' do
       it do
+        expect(logger).to receive(:error).with(anything)
+
         options '/foo/bar'
         expect(last_response.status).to eq(405)
       end
@@ -40,6 +49,7 @@ module Pechkin
 
     context 'PATCH is not allowed' do
       it do
+        expect(logger).to receive(:error).with(anything)
         patch '/foo/bar'
         expect(last_response.status).to eq(405)
       end
@@ -47,6 +57,7 @@ module Pechkin
 
     context 'POST is allowed' do
       it do
+        expect(logger).to receive(:error).with(anything)
         post '/foo/bar'
         expect(last_response.status).not_to eq(405)
       end
@@ -54,12 +65,15 @@ module Pechkin
 
     context 'when requested path is not /channel/message' do
       it do
+        expect(logger).to receive(:error).with(anything)
         post '/b/c'
+
         expect(last_response.status).to eq(404)
       end
 
       it do
         expect(handler).not_to receive(:message?).with(anything, anything)
+        expect(logger).to receive(:error).with(anything)
 
         post '/'
         expect(last_response.status).to eq(404)
@@ -67,6 +81,7 @@ module Pechkin
 
       it do
         expect(handler).not_to receive(:message?).with(anything, anything)
+        expect(logger).to receive(:error).with(anything)
 
         post '/omg'
         expect(last_response.status).to eq(404)
@@ -89,6 +104,7 @@ module Pechkin
     context 'when data is not json' do
       it do
         expect(handler).to receive(:message?).with('a', 'b').and_return(true)
+        expect(logger).to receive(:error).with(any_args)
 
         post '/a/b', 'Obviosly not a json string'
         expect(last_response.status).to eq(503)
