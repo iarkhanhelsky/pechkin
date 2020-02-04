@@ -1,6 +1,7 @@
 # New
 
 * Add basic logging layer
+* Internal cleanup
 
 # 1.2.2
 
