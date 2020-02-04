@@ -14,7 +14,7 @@ module Pechkin
         .with(request_url, anything, headers: anything).and_return(response)
 
       expect(connector.send_message('#general', 'Hello', {}))
-        .to eq(['#general', 200, 'OK'])
+        .to eq(channel: '#general', code: 200,  response: 'OK')
     end
 
     it 'Adds Authorization header with requests' do
@@ -23,7 +23,7 @@ module Pechkin
         .with(anything, anything, headers: headers).and_return(response)
 
       expect(connector.send_message('#general', 'Hello', {}))
-        .to eq(['#general', 200, 'OK'])
+        .to eq(channel: '#general', code: 200, response: 'OK')
     end
 
     it 'Sends channel id and message text' do
@@ -33,7 +33,7 @@ module Pechkin
         .and_return(response)
 
       expect(connector.send_message('#general', 'Foo', {}))
-        .to eq(['#general', 200, 'OK'])
+        .to eq(channel: '#general', code: 200, response: 'OK')
     end
 
     it 'Sends slack_attachments as attachments' do
@@ -47,13 +47,14 @@ module Pechkin
         .and_return(response)
 
       expect(connector.send_message('#general', 'Foo', message_desc))
-        .to eq(['#general', 200, 'OK'])
+        .to eq(channel: '#general', code: 200, response: 'OK')
     end
 
     context 'when text is empty and attachments is empty' do
       it do
         expect(connector.send_message('#general', '', {}))
-          .to eq(['#general', 400, 'Internal error: message is empty'])
+          .to eq(channel: '#general', code: 400,
+                 response: 'Internal error: message is empty')
       end
     end
   end

@@ -12,7 +12,7 @@ module Pechkin
       params = options.update(chat_id: chat_id, text: message)
 
       response = post_data(method_url('sendMessage'), params)
-      [chat_id, response.code.to_i, response.body]
+      { chat_id: chat_id, code: response.code.to_i, response: response.body }
     end
 
     private

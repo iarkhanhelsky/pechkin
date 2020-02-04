@@ -1,3 +1,7 @@
+# New
+
+* Add basic logging layer
+
 # 1.2.2
 
 * Bind address was not actualy bound

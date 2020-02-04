@@ -1,12 +1,37 @@
 module Pechkin
+  # Generic application error class.
+  #
+  # Allows us return meaningful error messages
+  class AppError < StandardError
+    attr_reader :code
+
+    def initialize(code, msg)
+      super(msg)
+      @code = code
+    end
+
+    class << self
+      def bad_request(message)
+        AppError.new(503, message)
+      end
+
+      def message_not_found
+        AppError.new(404, 'message not found')
+      end
+
+      def http_method_not_allowed
+        AppError.new(405, 'method not allowed')
+      end
+    end
+  end
   # Application configurator and builder. This creates all needed middleware
   # and stuff
   class AppBuilder
     def build(handler, options)
-      app = App.new
+      logger = create_logger(options.log_dir)
+      app = App.new(logger)
       app.handler = handler
       prometheus = Pechkin::PrometheusUtils.registry
-      logger = create_logger(options.log_dir)
 
       Rack::Builder.app do
         use Rack::CommonLogger, logger
@@ -15,7 +40,8 @@ module Pechkin
         # Add Auth check if found htpasswd file or it was excplicitly provided
         # See CLI class for configuration details
         if options.htpasswd
-          use Pechkin::Auth::Middleware, auth_file: options.htpasswd
+          use Pechkin::Auth::Middleware, auth_file: options.htpasswd,
+                                         logger: logger
         end
         use Prometheus::Middleware::Exporter, registry: prometheus
 
@@ -40,13 +66,43 @@ module Pechkin
 
   # Rack application to handle requests
   class App
-    attr_accessor :handler
+    DEFAULT_CONTENT_TYPE = { 'Content-Type' => 'application/json' }.freeze
+    DEFAULT_HEADERS = {}.merge(DEFAULT_CONTENT_TYPE).freeze
+
+    attr_accessor :handler, :logger
+
+    def initialize(logger)
+      @logger = logger
+    end
 
     def call(env)
-      RequestHandler.new(handler, env).handle
+      req = Rack::Request.new(env)
+      result = RequestHandler.new(handler, req, logger).handle
+      response(200, result)
+    rescue AppError => e
+      proces_app_error(req, e)
     rescue StandardError => e
-      body = { status: 'error', reason: e.message }.to_json
-      ['503', { 'Content-Type' => 'application/json' }, [body]]
+      process_unhandled_error(req, e)
+    end
+
+    private
+
+    def response(code, body)
+      [code.to_s, DEFAULT_HEADERS, [body.to_json]]
+    end
+
+    def proces_app_error(req, err)
+      data = { status: 'error', message: err.message }
+      req.body.rewind
+      body = req.body.read
+      logger.error "Can't process message: #{err.message}. Body: '#{body}'"
+      response(err.code, data)
+    end
+
+    def process_unhandled_error(_req, err)
+      data = { status: 'error', message: err.message }
+      logger.error("#{err.message}\n\t" + err.backtrace.join("\n\t"))
+      response(503, data)
     end
   end
 
@@ -54,16 +110,15 @@ module Pechkin
   # internal state isolated
   class RequestHandler
     REQ_PATH_PATTERN = %r{^/(.+)/([^/]+)/?$}
-    DEFAULT_CONTENT_TYPE = { 'Content-Type' => 'application/json' }.freeze
-    DEFAULT_HEADERS = {}.merge(DEFAULT_CONTENT_TYPE).freeze
 
-    attr_reader :req, :env, :handler,
-                :channel_id, :message_id
+    attr_reader :req, :handler,
+                :channel_id, :message_id,
+                :logger
 
-    def initialize(handler, env)
+    def initialize(handler, req, logger)
       @handler = handler
-      @env = env
-      @req = Rack::Request.new(env)
+      @req = req
+      @logger = logger
 
       @channel_id, @message_id = req.path_info.match(REQ_PATH_PATTERN) do |m|
         [m[1], m[2]]
@@ -71,40 +126,27 @@ module Pechkin
     end
 
     def handle
-      return not_allowed unless post?
-      return not_found unless message?
+      raise AppError.http_method_not_allowed unless post?
+      raise AppError.message_not_found unless message?
 
-      begin
-        data = JSON.parse(req.body.read)
-      rescue JSON::JSONError => e
-        return bad_request(e.message)
+      data = parse_data(req.body.read)
+      handler.handle(channel_id, message_id, data).each do |i|
+        logger.info "Sent #{channel_id}/#{message_id}: #{i.to_json}"
       end
-
-      response(200, handler.handle(channel_id, message_id, data).to_json)
     end
 
     private
+
+    def parse_data(data)
+      JSON.parse(data)
+    rescue JSON::JSONError => e
+      raise AppError.bad_request(e.message)
+    end
 
     def message?
       return false unless @channel_id && @message_id
 
       handler.message?(@channel_id, @message_id)
-    end
-
-    def not_allowed
-      response(405, '{"status":"error", "reason":"method not allowed"}')
-    end
-
-    def not_found
-      response(404, '{"status":"error", "reason":"message not found"}')
-    end
-
-    def bad_request(body)
-      response(503, body)
-    end
-
-    def response(code, body)
-      [code.to_s, DEFAULT_HEADERS, [body]]
     end
 
     def post?
