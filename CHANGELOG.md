@@ -2,6 +2,7 @@
 
 * Add basic logging layer
 * Internal cleanup
+* Drop grape from gemspec
 
 # 1.2.2
 
