@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pechkin (1.2.0)
+    pechkin (1.2.1)
       grape (= 1.1.0)
       htauth (= 2.0.0)
       powerpack (= 0.1.2)
