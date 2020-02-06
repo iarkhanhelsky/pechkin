@@ -8,6 +8,8 @@ module Pechkin
   # list respectievly means we need at least one matching rule to decline data
   # processing.
   class MessageMatcher
+    KEY_ALLOW = 'allow'.freeze
+    KEY_FORBID = 'forbid'.freeze
     # Checks data object against allow / forbid rule sets in message
     # configuration. If data object matches rules it means we can process this
     # data and send message.
@@ -19,11 +21,11 @@ module Pechkin
     def matches?(message_config, data)
       check(message_config)
 
-      if message_config.key?('allow')
-        rules = message_config['allow']
+      if message_config.key?(KEY_ALLOW)
+        rules = message_config[KEY_ALLOW]
         rules.any? { |r| check_rule(r, data) }
-      elsif message_config.key?('forbid')
-        rules = message_config['forbid']
+      elsif message_config.key?(KEY_FORBID)
+        rules = message_config[KEY_FORBID]
         rules.all? { |r| !check_rule(r, data) }
       else
         true
@@ -33,7 +35,7 @@ module Pechkin
     private
 
     def check(msg)
-      return unless msg.key?('allow') && msg.key?('forbid')
+      return unless msg.key?(KEY_ALLOW) && msg.key?(KEY_FORBID)
 
       raise MessageMatchError, 'Both allow and forbid present in message config'
     end

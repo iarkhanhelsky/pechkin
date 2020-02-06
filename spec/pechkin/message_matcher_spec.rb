@@ -17,9 +17,9 @@ module Pechkin
     context 'when allow contains single rule. array test' do
       let(:message_config) do
         YAML.safe_load <<~MESSAGE
-                         allow:
-                           - branches: ['default']
-                        MESSAGE
+          allow:
+            - branches: ['default']
+        MESSAGE
       end
 
       it do
@@ -36,9 +36,9 @@ module Pechkin
     context 'when allow contains single rule. top-level array' do
       let(:message_config) do
         YAML.safe_load <<~MESSAGE
-                       allow:
-                        - [1, 2, 3]
-                       MESSAGE
+          allow:
+          - [1, 2, 3]
+        MESSAGE
       end
 
       it do
@@ -57,7 +57,71 @@ module Pechkin
       end
     end
 
+    context 'when allow contains multiple rules' do
+      let(:message_config) do
+        YAML.safe_load <<~MESSAGE
+          allow:
+           - branches: ['default']
+           - branches: ['develop']
+           - branches: ['demo']
+        MESSAGE
+      end
+
+      it do
+        expect(matcher.matches?(message_config, 'branches' => ['default']))
+          .to be(true)
+      end
+
+      it do
+        expect(matcher.matches?(message_config, 'branches' => ['develop']))
+          .to be(true)
+      end
+
+      it do
+        expect(matcher.matches?(message_config, 'branches' => ['demo']))
+          .to be(true)
+      end
+
+      it do
+        expect(matcher.matches?(message_config, 'branches' => []))
+          .to be(false)
+      end
+    end
+
+    # Since forbid is reverted allow. We just need check basic stuff
     context 'forbid rules' do
+      let(:message_config) do
+        YAML.safe_load <<~MESSAGE
+          forbid:
+            - branches: ['develop']
+        MESSAGE
+      end
+
+      it do
+        expect(matcher.matches?(message_config, 'branches' => ['develop']))
+          .to be(false)
+      end
+
+      it do
+        expect(matcher.matches?(message_config, 'branches' => ['default']))
+          .to be(true)
+      end
+    end
+
+    context 'when message config contains both allow and forbid' do
+      let(:message_config) do
+        YAML.safe_load <<~MESSAGE
+          allow:
+            - branches: ['develop']
+          forbid:
+            - branches: ['default']
+        MESSAGE
+      end
+
+      it do
+        expect { matcher.matches?(message_config, {}) }
+          .to raise_error MessageMatchError
+      end
     end
   end
 end
