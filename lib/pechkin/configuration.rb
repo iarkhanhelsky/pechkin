@@ -10,16 +10,16 @@ module Pechkin
   # Pechkin reads its configuration from provided directory structure. Basic
   # layout expected to be as follows:
   #   .
-  #   | - bots/                  <= Bots configuration
-  #   |   | - marvin.yml         <= Each bot described by yaml file
+  #   | - bots/                  <- Bots configuration
+  #   |   | - marvin.yml         <- Each bot described by yaml file
   #   |   | - bender.yml
   #   |
-  #   | - channels/              <= Channels description
+  #   | - channels/              <- Channels description
   #   |   | - slack-repository-feed
   #   |       | - commit-hg.yml
   #   |       | - commit-svn.yml
   #   |
-  #   | - views/                 <= Template storage
+  #   | - views/                 <- Template storage
   #       | - commit-hg.erb
   #       | - commit-svn.erb
   #

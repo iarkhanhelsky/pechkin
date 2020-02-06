@@ -4,6 +4,7 @@ module Pechkin
   class AppBuilder
     def build(handler, options)
       logger = create_logger(options.log_dir)
+      handler.logger = logger
       app = App.new(logger)
       app.handler = handler
       prometheus = Pechkin::PrometheusUtils.registry

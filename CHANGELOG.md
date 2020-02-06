@@ -2,6 +2,8 @@
 
 * Add basic logging layer
 * Internal cleanup
+* Drop grape from gemspec
+* Add allow / forbid rules for messages
 
 # 1.2.2
 

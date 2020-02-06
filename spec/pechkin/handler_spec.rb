@@ -79,6 +79,46 @@ module Pechkin
 
         handler.handle('a', 'a', data)
       end
+
+      context 'when message contains allow / forbid rules' do
+        let(:connector) { double }
+        let(:channel) { double }
+        let(:handler) { Handler.new('a' => channel) }
+        let(:msg) do
+          YAML.safe_load <<~MESSAGE
+            allow:
+              - branch: 'master'
+          MESSAGE
+        end
+
+        before { allow(channel).to receive(:messages).and_return('a' => msg) }
+        before { allow(channel).to receive(:chat_ids).and_return(['#general']) }
+        before { allow(channel).to receive(:connector).and_return(connector) }
+
+        it 'all chats will be skipped' do
+          data = { 'branch' => 'default' }
+          expect(channel)
+            .to receive(:chat_ids).and_return(['#general', '#random'])
+
+          expect(handler.handle('a', 'a', data)).to eq([])
+        end
+
+        it 'message will be send' do
+          data = { 'branch' => 'master' }
+
+          expect(channel)
+            .to receive(:chat_ids).and_return(['#general', '#random'])
+          expect(connector).to receive(:send_message)
+            .with('#general', '', msg)
+            .and_return(:ok_general)
+          expect(connector).to receive(:send_message)
+            .with('#random', '', msg)
+            .and_return(:ok_random)
+
+          expect(handler.handle('a', 'a', data))
+            .to eq(%i[ok_general ok_random])
+        end
+      end
     end
   end
 end

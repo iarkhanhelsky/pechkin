@@ -2,10 +2,16 @@ module Pechkin
   # Processes feeded data chunks and sends them via connectors to needed IM
   # services. Can skip some requests acording to filters.
   class Handler
-    attr_reader :channels
+    attr_reader :channels, :message_matcher
+    attr_accessor :logger
 
-    def initialize(channels)
+    def initialize(channels, stdout = STDOUT, stderr = STDERR)
       @channels = channels
+      # Create empty logger by default
+      @logger = Logger.new(IO::NULL)
+      @stdout = stdout
+      @stderr = stderr
+      @message_matcher = MessageMatcher.new
     end
 
     # Handles message request. Each request has three parameters: channel id,
@@ -21,20 +27,18 @@ module Pechkin
     #  deserialized json.
     # @see Configuration
     def handle(channel_id, msg_id, data)
-      channel_config = fetch_channel(channel_id)
-      # Find message and try substitute values to message parameters.
-      message_config = substitute(data, fetch_message(channel_config, msg_id))
-
-      data = (message_config['variables'] || {}).merge(data)
-      template = message_config['template']
-
-      text = ''
-      text = template.render(data) unless template.nil?
-
+      channel_config, message_config, text =
+        prepare_message(channel_id, msg_id, data)
       chats = channel_config.chat_ids
       connector = channel_config.connector
 
-      chats.map { |chat| connector.send_message(chat, text, message_config) }
+      if message_allowed?(message_config, data)
+        chats.map { |chat| connector.send_message(chat, text, message_config) }
+      else
+        logger.info "#{channel_id}/#{msg_id}: " \
+                    "Skip sending message. Because it's not allowed"
+        []
+      end
     end
 
     # Executes message handling and renders template using connector logic
@@ -47,20 +51,16 @@ module Pechkin
     #  deserialized json.
     # @see Configuration
     def preview(channel_id, msg_id, data)
-      channel_config = fetch_channel(channel_id)
-      # Find message and try substitute values to message parameters.
-      message_config = substitute(data, fetch_message(channel_config, msg_id))
-
-      data = (message_config['variables'] || {}).merge(data)
-      template = message_config['template']
-
-      text = ''
-      text = template.render(data) unless template.nil?
-
+      channel_config, message_config, text =
+        prepare_message(channel_id, msg_id, data)
       chats = channel_config.chat_ids
       connector = channel_config.connector
 
-      connector.preview(chats, text, message_config)
+      if message_allowed?(message_config, data)
+        connector.preview(chats, text, message_config)
+      else
+        puts "No message sent beacuse it's not allowed"
+      end
     end
 
     def message?(channel_id, msg_id)
@@ -68,6 +68,10 @@ module Pechkin
     end
 
     private
+
+    def puts(msg)
+      @stdout.puts(msg)
+    end
 
     # Find channel by it's id or trow ChannelNotFoundError
     def fetch_channel(channel_id)
@@ -82,6 +86,24 @@ module Pechkin
       raise MessageNotFoundError, msg_id unless message_list.key?(msg_id)
 
       message_list[msg_id]
+    end
+
+    def message_allowed?(message_config, data)
+      message_matcher.matches?(message_config, data)
+    end
+
+    def prepare_message(channel_id, msg_id, data)
+      channel_config = fetch_channel(channel_id)
+      # Find message and try substitute values to message parameters.
+      message_config = substitute(data, fetch_message(channel_config, msg_id))
+
+      data = (message_config['variables'] || {}).merge(data)
+      template = message_config['template']
+
+      text = ''
+      text = template.render(data) unless template.nil?
+
+      [channel_config, message_config, text]
     end
 
     def substitute(data, message_desc)
