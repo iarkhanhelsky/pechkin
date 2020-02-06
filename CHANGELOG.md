@@ -1,4 +1,4 @@
-# New
+# 1.3.0
 
 * Add basic logging layer
 * Internal cleanup
