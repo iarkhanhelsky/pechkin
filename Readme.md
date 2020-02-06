@@ -24,6 +24,7 @@ short:
   - [Channels](#channels)
   - [Messages](#messages)
     - [Message values substitution](#message-values-subsitution)
+    - [Allow / Forbid](#allow-forbid)
     - [Connector specific parameters](#connector-specific-parameters)
   - [Authorization](#authorization)
   - [Wrapping up](#wrapping-up)
@@ -95,7 +96,7 @@ be merged with received data. So data can override variable parameters too.
 
 ### Message values substitution
 
-As well as you can inject variable parameters into template data through
+As well as you can inject variable parametedatars into template data through
 `variables` field in message configuration you also can substitute some values
 in message config. This is honestly very dirty way to set `slack_attachments`
 (see below) values, without any external scripting.
@@ -110,6 +111,35 @@ slack_attachments:
 ```
 
 No value processing is supported.
+
+### Allow / Forbid
+
+Pechkin provides filter mechanism to allow users to select which messages are
+need processing and which are not. This can be expressed in allow / forbid rules
+in message configuration. For example:
+
+```yml
+# { "branch": "master", ... } => process
+# { "branch": "testing", ... } => skip
+allow:
+  - branch: 'master'
+```
+
+will match all requests which data object contains `'master'` on key `branch`.
+
+Same is aplicable to forbid. Following means do not process objects with
+`'testing'` value set to `branch` field.
+
+```yml
+# { "branch": "testing", ... } => skip
+# { "branch": "master", ... } => process
+forbid:
+  - branch: 'testing'
+```
+
+Both `forbid` and `allow` parameters should contain list of rules. When data
+arrives, Pechkin will find first matching rule and will make desicion based on
+whether it 'allow' rule or 'forbid' rule.
 
 ### Connector specific parameters
 
