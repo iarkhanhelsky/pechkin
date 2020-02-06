@@ -84,14 +84,14 @@ module Pechkin
         let(:connector) { double }
         let(:channel) { double }
         let(:handler) { Handler.new('a' => channel) }
-        let(:message) do
+        let(:msg) do
           YAML.safe_load <<~MESSAGE
             allow:
               - branch: 'master'
           MESSAGE
         end
 
-        before { allow(channel).to receive(:messages).and_return('a' => message) }
+        before { allow(channel).to receive(:messages).and_return('a' => msg) }
         before { allow(channel).to receive(:chat_ids).and_return(['#general']) }
         before { allow(channel).to receive(:connector).and_return(connector) }
 
@@ -109,10 +109,10 @@ module Pechkin
           expect(channel)
             .to receive(:chat_ids).and_return(['#general', '#random'])
           expect(connector).to receive(:send_message)
-            .with('#general', '', message)
+            .with('#general', '', msg)
             .and_return(:ok_general)
           expect(connector).to receive(:send_message)
-            .with('#random', '', message)
+            .with('#random', '', msg)
             .and_return(:ok_random)
 
           expect(handler.handle('a', 'a', data))
