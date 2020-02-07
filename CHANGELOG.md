@@ -1,3 +1,7 @@
+# 1.3.1
+
+* Fix pechkin initialization (missing logger parameter)
+
 # 1.3.0
 
 * Add basic logging layer
