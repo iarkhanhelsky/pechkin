@@ -16,8 +16,7 @@ module Pechkin
         # Add Auth check if found htpasswd file or it was excplicitly provided
         # See CLI class for configuration details
         if options.htpasswd
-          use Pechkin::Auth::Middleware, auth_file: options.htpasswd,
-                                         logger: logger
+          use Pechkin::Auth::Middleware, auth_file: options.htpasswd
         end
         use Prometheus::Middleware::Exporter, registry: prometheus
 
