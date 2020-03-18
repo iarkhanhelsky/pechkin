@@ -13,9 +13,9 @@ module Pechkin
     def create_connector(bot)
       case bot.connector
       when 'tg', 'telegram'
-        TelegramConnector.new(bot.token, bot.name)
+        Connector::Telegram.new(bot.token, bot.name)
       when 'slack'
-        SlackConnector.new(bot.token, bot.name)
+        Connector::Slack.new(bot.token, bot.name)
       else
         raise 'Unknown connector ' + bot.connector + ' for ' + bot.name
       end

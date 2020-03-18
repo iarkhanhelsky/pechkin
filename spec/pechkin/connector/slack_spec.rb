@@ -1,10 +1,10 @@
 module Pechkin
-  describe SlackConnector do
+  describe Connector::Slack do
     SLACK_BOT_TOKEN = 'xoxb-123423-234234-omgomg'.freeze
     SLACK_REQ_URL = 'https://slack.com/api/chat.postMessage'.freeze
 
     let(:request_url) { SLACK_REQ_URL }
-    let(:connector) { SlackConnector.new(SLACK_BOT_TOKEN, 'marvin') }
+    let(:connector) { Connector::Slack.new(SLACK_BOT_TOKEN, 'marvin') }
     let(:response) { double }
     before { allow(response).to receive(:code).and_return(200) }
     before { allow(response).to receive(:body).and_return('OK') }

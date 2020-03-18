@@ -1,11 +1,11 @@
 module Pechkin
-  describe TelegramConnector do
+  describe Connector::Telegram do
     TELEGRAM_BOT_TOKEN = 'bot123456'.freeze
     TELEGRAM_REQ_URL = "https://api.telegram.org/bot#{TELEGRAM_BOT_TOKEN}" \
                        '/sendMessage'.freeze
 
     let(:request_url) { TELEGRAM_REQ_URL }
-    let(:connector) { TelegramConnector.new(TELEGRAM_BOT_TOKEN, 'marvin') }
+    let(:connector) { Connector::Telegram.new(TELEGRAM_BOT_TOKEN, 'marvin') }
     let(:response) { double }
     before { expect(response).to receive(:code).and_return(200) }
     before { expect(response).to receive(:body).and_return('OK') }

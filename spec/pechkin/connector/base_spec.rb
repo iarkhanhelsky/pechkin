@@ -1,7 +1,7 @@
 module Pechkin
-  describe Connector do
+  describe Connector::Base do
     describe '#post_data' do
-      let(:connector) { Connector.new }
+      let(:connector) { Connector::Base.new }
       let(:http_url) { 'http://omg.com/api/v1/endpoint' }
       let(:https_url) { 'https://omg.com/api/v1/endpoint' }
 
