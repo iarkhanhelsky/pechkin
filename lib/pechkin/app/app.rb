@@ -34,9 +34,10 @@ module Pechkin
       response(err.code, data)
     end
 
-    def process_unhandled_error(_req, err)
+    def process_unhandled_error(req, err)
       data = { status: 'error', message: err.message }
       logger.error("#{err.message}\n\t" + err.backtrace.join("\n\t"))
+      logger.error(req.body.read)
       response(503, data)
     end
   end

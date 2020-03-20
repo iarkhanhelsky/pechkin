@@ -1,3 +1,8 @@
+# 1.3.2
+
+* Print request body when unhandled error occurs
+* Internal cleanup
+
 # 1.3.1
 
 * Fix pechkin initialization (missing logger parameter)
