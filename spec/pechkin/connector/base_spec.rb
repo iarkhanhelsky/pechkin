@@ -20,9 +20,10 @@ module Pechkin
       end
 
       it 'sets Content-Type to application/json by default' do
+        headers = { 'Content-Type' => 'application/json; charset=UTF-8' }
         stub_request(:post, https_url)
           .with(body: { 'key' => 'value' }.to_json,
-                headers: { 'Content-Type' => 'application/json' })
+                headers: headers)
           .to_return(status: 200)
         connector.post_data(https_url, 'key' => 'value')
       end

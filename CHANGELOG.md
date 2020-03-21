@@ -1,5 +1,6 @@
 # 1.3.2
 
+* Force charset=UTF-8 in http requests
 * Print request body when unhandled error occurs
 * Internal cleanup
 

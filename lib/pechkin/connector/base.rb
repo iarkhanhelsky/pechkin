@@ -2,6 +2,10 @@ module Pechkin
   module Connector
     # Base connector
     class Base
+      DEFAULT_HEADERS = {
+        'Content-Type' => 'application/json; charset=UTF-8'
+      }.freeze
+
       def send_message(chat, message, message_desc); end
 
       def preview(chats, message, _message_desc)
@@ -11,7 +15,7 @@ module Pechkin
 
       def post_data(url, data, headers: {})
         uri = URI.parse(url)
-        headers = { 'Content-Type' => 'application/json' }.merge(headers)
+        headers = DEFAULT_HEADERS.merge(headers)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = url.start_with?('https://')
 
