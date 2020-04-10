@@ -3,6 +3,7 @@
 * Force charset=UTF-8 in http requests
 * Print request body when unhandled error occurs
 * Internal cleanup
+* Log expected and actual data when MessageMatcher fails to match rule.
 
 # 1.3.1
 

@@ -1,6 +1,6 @@
 module Pechkin
   describe MessageMatcher do
-    let(:matcher) { MessageMatcher.new }
+    let(:matcher) { MessageMatcher.new(Logger.new(IO::NULL)) }
 
     context 'when message config does not contain any rules' do
       it { expect(matcher.matches?({}, {})).to be(true) }
@@ -83,7 +83,17 @@ module Pechkin
       end
 
       it do
+        expect(matcher.matches?(message_config, 'branches' => nil))
+          .to be(false)
+      end
+
+      it do
         expect(matcher.matches?(message_config, 'branches' => []))
+          .to be(false)
+      end
+
+      it do
+        expect(matcher.matches?(message_config, 'branches' => ['testing']))
           .to be(false)
       end
     end

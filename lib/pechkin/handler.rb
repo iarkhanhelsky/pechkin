@@ -11,7 +11,7 @@ module Pechkin
       @logger = Logger.new(IO::NULL)
       @stdout = stdout
       @stderr = stderr
-      @message_matcher = MessageMatcher.new
+      @message_matcher = MessageMatcher.new(@logger)
     end
 
     # Handles message request. Each request has three parameters: channel id,
@@ -35,7 +35,7 @@ module Pechkin
       if message_allowed?(message_config, data)
         chats.map { |chat| connector.send_message(chat, text, message_config) }
       else
-        logger.info "#{channel_id}/#{msg_id}: " \
+        logger.warn "#{channel_id}/#{msg_id}: " \
                     "Skip sending message. Because it's not allowed"
         []
       end
