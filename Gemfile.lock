@@ -5,7 +5,7 @@ PATH
       htauth (= 2.0.0)
       powerpack (= 0.1.2)
       prometheus-client (= 1.0.0)
-      rack (= 2.0.8)
+      rack (= 2.2.3)
 
 GEM
   remote: https://rubygems.org/
@@ -25,7 +25,7 @@ GEM
     powerpack (0.1.2)
     prometheus-client (1.0.0)
     public_suffix (3.0.2)
-    rack (2.0.8)
+    rack (2.2.3)
     rack-test (0.7.0)
       rack (>= 1.0, < 3)
     rainbow (3.0.0)
