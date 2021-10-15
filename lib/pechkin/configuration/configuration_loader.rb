@@ -17,7 +17,7 @@ module Pechkin
       when 'slack'
         Connector::Slack.new(bot.token, bot.name)
       else
-        raise 'Unknown connector ' + bot.connector + ' for ' + bot.name
+        raise "Unknown connector #{bot.connector} for #{bot.name}"
       end
     end
 

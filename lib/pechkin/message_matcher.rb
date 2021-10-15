@@ -1,5 +1,6 @@
 module Pechkin
   class MessageMatchError < StandardError; end
+
   # Allows to match message configuration against received data.
   #
   # Data is checked againts either allow or forbid rules. But not both at the
@@ -51,11 +52,12 @@ module Pechkin
     # can take one field in rule and check it separately as new rule. If all
     # fields are passed check then whole rule passed.
     def check_rule(top_rule, sub_rule, data)
-      result = if sub_rule.is_a?(Hash)
+      result = case sub_rule
+               when Hash
                  check_hash_rule(top_rule, sub_rule, data)
-               elsif sub_rule.is_a?(Array)
+               when Array
                  check_array_rule(top_rule, sub_rule, data)
-               elsif sub_rule.is_a?(String)
+               when String
                  check_string_rule(top_rule, sub_rule, data)
                else
                  sub_rule.eql?(data)

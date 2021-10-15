@@ -4,6 +4,8 @@ module Pechkin
       attr_reader :name
 
       def initialize(bot_token, name)
+        super()
+
         @bot_token = bot_token
         @name = name
       end

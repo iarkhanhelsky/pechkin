@@ -29,6 +29,7 @@ module Pechkin
         d = if data.start_with?('@')
               file = data[1..-1]
               raise "File not found #{file}" unless File.exist?(file)
+
               IO.read(file)
             else
               data

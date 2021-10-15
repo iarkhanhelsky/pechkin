@@ -1,10 +1,8 @@
 module Pechkin
   describe Connector::Slack do
-    SLACK_BOT_TOKEN = 'xoxb-123423-234234-omgomg'.freeze
-    SLACK_REQ_URL = 'https://slack.com/api/chat.postMessage'.freeze
-
-    let(:request_url) { SLACK_REQ_URL }
-    let(:connector) { Connector::Slack.new(SLACK_BOT_TOKEN, 'marvin') }
+    let(:slack_bot_token) { 'xoxb-123423-234234-omgomg' }
+    let(:request_url) { 'https://slack.com/api/chat.postMessage' }
+    let(:connector) { Connector::Slack.new(slack_bot_token, 'marvin') }
     let(:response) { double }
     before { allow(response).to receive(:code).and_return(200) }
     before { allow(response).to receive(:body).and_return('OK') }
@@ -18,7 +16,7 @@ module Pechkin
     end
 
     it 'Adds Authorization header with requests' do
-      headers = { 'Authorization' => "Bearer #{SLACK_BOT_TOKEN}" }
+      headers = { 'Authorization' => "Bearer #{slack_bot_token}" }
       expect(connector).to receive(:post_data)
         .with(anything, anything, headers: headers).and_return(response)
 

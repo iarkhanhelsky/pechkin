@@ -5,6 +5,7 @@ module Pechkin
     # Utility class for altering htpasswd files
     class Manager
       attr_reader :htpasswd
+
       def initialize(htpasswd)
         @htpasswd = htpasswd
       end

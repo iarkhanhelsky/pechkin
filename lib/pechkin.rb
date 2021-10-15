@@ -28,8 +28,8 @@ module Pechkin # :nodoc:
       cmd = Command::Dispatcher.new(options).dispatch
       cmd.execute
     rescue StandardError => e
-      warn 'Error: ' + e.message
-      warn "\t" + e.backtrace.reverse.join("\n\t") if options.debug?
+      warn "Error: #{e.message}"
+      warn "\t#{e.backtrace.reverse.join("\n\t")}" if options.debug?
       exit 2
     end
   end

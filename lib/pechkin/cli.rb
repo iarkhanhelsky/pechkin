@@ -13,7 +13,7 @@ module Pechkin
     # @opt names [Array<String>] list of command line keys
     # @opt desc [String] option description
     # @opt type [Class] argument type to parse from command line, e.g. Integer
-    def opt(name, default: nil, names:, desc: '', type: nil)
+    def opt(name, names:, default: nil, desc: '', type: nil)
       @cli_options ||= []
 
       # raise ':names is nil or empty' if names.nil? || names.empty?

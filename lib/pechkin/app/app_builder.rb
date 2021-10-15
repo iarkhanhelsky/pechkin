@@ -15,9 +15,7 @@ module Pechkin
         use Prometheus::Middleware::Collector, registry: prometheus
         # Add Auth check if found htpasswd file or it was excplicitly provided
         # See CLI class for configuration details
-        if options.htpasswd
-          use Pechkin::Auth::Middleware, auth_file: options.htpasswd
-        end
+        use Pechkin::Auth::Middleware, auth_file: options.htpasswd if options.htpasswd
         use Prometheus::Middleware::Exporter, registry: prometheus
 
         run app
@@ -34,7 +32,7 @@ module Pechkin
         file = File.open(log_file, File::WRONLY | File::APPEND)
         Logger.new(file)
       else
-        Logger.new(STDOUT)
+        Logger.new($stdout)
       end
     end
   end

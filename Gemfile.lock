@@ -8,6 +8,7 @@ PATH
       rack (= 2.2.3)
 
 GEM
+  remote: https://rubygems.org/
   specs:
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)

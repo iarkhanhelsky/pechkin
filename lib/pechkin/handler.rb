@@ -5,7 +5,7 @@ module Pechkin
     attr_reader :channels, :message_matcher
     attr_accessor :logger
 
-    def initialize(channels, stdout = STDOUT, stderr = STDERR)
+    def initialize(channels, stdout = $stdout, stderr = $stderr)
       @channels = channels
       # Create empty logger by default
       @logger = Logger.new(IO::NULL)

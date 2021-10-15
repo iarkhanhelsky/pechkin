@@ -15,9 +15,7 @@ module Pechkin
     def load_views_configuration(working_dir, views)
       views_dir = File.join(working_dir, 'views')
 
-      unless File.directory?(views_dir)
-        raise ConfigurationError, "'#{views_dir}' is not a directory"
-      end
+      raise ConfigurationError, "'#{views_dir}' is not a directory" unless File.directory?(views_dir)
 
       Dir["#{views_dir}/**/*.erb"].each do |f|
         relative_path = f["#{views_dir}/".length..-1]

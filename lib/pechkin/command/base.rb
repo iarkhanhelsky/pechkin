@@ -9,7 +9,7 @@ module Pechkin
       #   command behaviour
       # @opt stdout [IO] IO object which represents STDOUT
       # @opt stderr [IO] IO object which represents STDERR
-      def initialize(options, stdout: STDOUT, stderr: STDERR)
+      def initialize(options, stdout: $stdout, stderr: $stderr)
         @options = options
         @stdout = stdout
         @stderr = stderr

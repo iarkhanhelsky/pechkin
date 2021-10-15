@@ -5,7 +5,7 @@ module Pechkin
         # admin:admin
         htpasswd_content = 'admin:$apr1$01Qu1Wqq$ODnwSVr.yfRH6zsJ1UFOb.'
         @htpasswd_file = Tempfile.new(['pechkin-', '.htpasswd'])
-        @htpasswd_file.write(htpasswd_content + "\n")
+        @htpasswd_file.write("#{htpasswd_content}\n")
         @htpasswd_file.close
       end
 

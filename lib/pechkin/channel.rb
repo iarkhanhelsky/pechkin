@@ -3,7 +3,7 @@ module Pechkin
   class Chanel
     attr_accessor :logger
 
-    def initialize(connector, channel_list, logger = ::Logger.new(STDOUT))
+    def initialize(connector, channel_list, logger = ::Logger.new($stdout))
       @connector = connector
       @channel_list = channel_list
       @channel_list = [channel_list] unless channel_list.is_a?(Array)

@@ -2,7 +2,7 @@ module Pechkin
   # Http requests handler. We need fresh instance per each request. To keep
   # internal state isolated
   class RequestHandler
-    REQ_PATH_PATTERN = %r{^/(.+)/([^/]+)/?$}
+    REQ_PATH_PATTERN = %r{^/(.+)/([^/]+)/?$}.freeze
 
     attr_reader :req, :handler,
                 :channel_id, :message_id,

@@ -22,9 +22,7 @@ module Pechkin
     def load_channels_configuration(working_dir, channels)
       channels_dir = File.join(working_dir, 'channels')
 
-      unless File.directory?(channels_dir)
-        raise ConfigurationError, "'#{channels_dir}' is not a directory"
-      end
+      raise ConfigurationError, "'#{channels_dir}' is not a directory" unless File.directory?(channels_dir)
 
       Dir["#{channels_dir}/*"].each do |channel_dir|
         next unless File.directory?(channel_dir)
@@ -63,9 +61,7 @@ module Pechkin
         message_config = YAML.safe_load(IO.read(file))
         name = File.basename(file, '.yml')
 
-        if message_config.key?('template')
-          message_config['template'] = get_template(message_config['template'])
-        end
+        message_config['template'] = get_template(message_config['template']) if message_config.key?('template')
 
         messages[name] = message_config
       end

@@ -4,7 +4,10 @@ module Pechkin
       super("No such channel #{channel_name}")
     end
   end
+
   class MessageNotFoundError < StandardError; end
+
   class MessageContentIsEmptyError < StandardError; end
+
   class ConfigurationError < StandardError; end
 end

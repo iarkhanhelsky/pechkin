@@ -15,9 +15,7 @@ module Pechkin
     def load_bots_configuration(working_dir, bots)
       bots_dir = File.join(working_dir, 'bots')
 
-      unless File.directory?(bots_dir)
-        raise ConfigurationError, "'#{bots_dir}' is not a directory"
-      end
+      raise ConfigurationError, "'#{bots_dir}' is not a directory" unless File.directory?(bots_dir)
 
       Dir["#{bots_dir}/*.yml"].each do |bot_file|
         name = File.basename(bot_file, '.yml')
