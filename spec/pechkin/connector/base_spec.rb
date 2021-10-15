@@ -9,14 +9,14 @@ module Pechkin
         stub_request(:post, http_url)
           .with(body: { 'key' => 'value' }.to_json)
           .to_return(status: 200)
-        connector.post_data(http_url, 'key' => 'value')
+        connector.post_data(http_url, { 'key' => 'value' })
       end
 
       it 'sends data via post request over https' do
         stub_request(:post, https_url)
           .with(body: { 'key' => 'value' }.to_json)
           .to_return(status: 200)
-        connector.post_data(https_url, 'key' => 'value')
+        connector.post_data(https_url, { 'key' => 'value' })
       end
 
       it 'sets Content-Type to application/json by default' do
@@ -25,7 +25,7 @@ module Pechkin
           .with(body: { 'key' => 'value' }.to_json,
                 headers: headers)
           .to_return(status: 200)
-        connector.post_data(https_url, 'key' => 'value')
+        connector.post_data(https_url, { 'key' => 'value' })
       end
 
       it 'sends provided headers' do
