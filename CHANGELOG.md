@@ -1,3 +1,8 @@
+# 1.4.0
+
+* Ruby 3.0 support
+* Updated dependencies
+
 # 1.3.2
 
 * Force charset=UTF-8 in http requests
