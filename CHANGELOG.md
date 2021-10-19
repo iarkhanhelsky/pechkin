@@ -1,3 +1,7 @@
+# 1.5.0
+
+* Add template expansion for any variable
+
 # 1.4.0
 
 * Ruby 3.0 support
