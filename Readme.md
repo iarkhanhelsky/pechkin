@@ -88,6 +88,14 @@ configured with following parameters:
 
 * `template` - template file path relative to `views/` directory
 (i.e. 'hello.erb')
+* One can also use `{ 'template': '..path..' }` object, to denote that we need
+template expansion for such value. For example:
+```
+template: gitlab-commit.erb
+slack_attachements:
+  - text:
+      template: gitlab-commit-attachment.erb
+```
 * `variables` - is a mapping (key - value) for configurable values in shared
 templates. For example one may want to share `commit.erb` among multiple
 channels but with sligthly different parameters. It may be `repository_base_url`

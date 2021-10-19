@@ -61,12 +61,51 @@ module Pechkin
         message_config = YAML.safe_load(IO.read(file))
         name = File.basename(file, '.yml')
 
-        message_config['template'] = get_template(message_config['template']) if message_config.key?('template')
+        # Dirty workaround. I need to recursively load templates. When doing it
+        # we looking for {'template': '...path to template..' } objects. But we
+        # don't want to force user write something like:
+        #   text:
+        #     template: '... path to main template...'
+        # because it's too mouthful for such common case.
+        #
+        # So now we pull main template out, then load everyting else. Then put
+        # it back.
+        template = nil
+        if message_config.key?('template')
+          template = get_template(message_config['template'])
+          message_config.delete('template')
+        end
 
-        messages[name] = message_config
+        message_config = load_templates(message_config)
+        message_config['template'] = template unless template.nil?
+
+        messages[name] = Message.new(message_config)
       end
 
       messages
+    end
+
+    def load_templates(object)
+      case object
+      when String
+        object
+      when Array
+        object.map { |o| load_templates(o) }
+      when Hash
+        if object.key?('template')
+          msg = 'When using template only 1 KV pair allowed'
+          raise ConfigurationError, msg unless object.size == 1
+
+          # Replace whole object with created template.
+          get_template(object['template'])
+        else
+          r = {}
+          object.each { |k, v| r[k] = load_templates(v) }
+          r
+        end
+      else
+        object
+      end
     end
 
     def get_template(path)

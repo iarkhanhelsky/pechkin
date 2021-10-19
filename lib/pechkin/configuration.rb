@@ -1,6 +1,5 @@
 require 'yaml'
 
-require_relative 'configuration/model'
 require_relative 'configuration/configuration_loader'
 require_relative 'configuration/configuration_loader_bots'
 require_relative 'configuration/configuration_loader_channels'
