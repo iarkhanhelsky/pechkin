@@ -95,13 +95,8 @@ module Pechkin
     def prepare_message(channel_id, msg_id, data)
       channel_config = fetch_channel(channel_id)
       # Find message and try substitute values to message parameters.
-      message_config = substitute(data, fetch_message(channel_config, msg_id))
-
-      data = (message_config['variables'] || {}).merge(data)
-      template = message_config['template']
-
-      text = ''
-      text = template.render(data) unless template.nil?
+      message = fetch_message(channel_config, msg_id)
+      message_config, text = message.prepare(data)
 
       [channel_config, message_config, text]
     end

@@ -5,12 +5,17 @@ module Pechkin
     end
 
     def prepare(data)
+      data = (@message['variables'] || {}).merge(data)
       # Find message and try substitute values to message parameters.
-      message_config = render(substitute(data, @mesage), data)
+      message_config = render(data, substitute(data, @message))
       text = ''
-      text = message_config['template'] if message_config.key?('template')
+      text = message_config.delete('template') if message_config.key?('template')
 
-      [text, message_config]
+      [message_config, text]
+    end
+
+    def to_h
+      Marshal.load(Marshal.dump(@message))
     end
 
     private
@@ -43,10 +48,10 @@ module Pechkin
       when MessageTemplate
         object.render(data)
       when Array
-        object.map { |o| render_recursive(substitutions, o) }
+        object.map { |o| render_recursive(data, o) }
       when Hash
         r = {}
-        object.each { |k, v| r[k] = render_recursive(substitutions, v) }
+        object.each { |k, v| r[k] = render_recursive(data, v) }
         r
       else
         object

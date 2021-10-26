@@ -23,39 +23,9 @@ module Pechkin
       let(:channel) { double }
       let(:handler) { Handler.new('a' => channel) }
 
-      before { allow(channel).to receive(:messages).and_return('a' => {}) }
+      before { allow(channel).to receive(:messages).and_return('a' => Message.new({})) }
       before { allow(channel).to receive(:chat_ids).and_return(['#general']) }
       before { allow(channel).to receive(:connector).and_return(connector) }
-
-      it 'applies substitutions to message parameters' do
-        data = { reference: 1234 }
-        message_config = { 'url' => 'https://a.com/${reference}' }
-        substituted_config = { 'url' => 'https://a.com/1234' }
-
-        expect(channel).to receive(:messages).and_return('a' => message_config)
-
-        expect(connector)
-          .to receive(:send_message).with('#general', '', substituted_config)
-
-        handler.handle('a', 'a', data)
-      end
-
-      it 'merges data values with variables field' do
-        template = double
-        message = {
-          'template' => template,
-          'variables' => { 'issue_labels' => ['HH-\\d+', 'hh'] }
-        }
-
-        expect(channel)
-          .to receive(:messages).and_return('a' => message)
-        expect(template)
-          .to receive(:render).with(message['variables']).and_return('')
-        expect(connector)
-          .to receive(:send_message).with('#general', '', message)
-
-        handler.handle('a', 'a', {})
-      end
 
       it 'sends message for each channel id' do
         expect(connector).to receive(:send_message).with('#general', '', {})
@@ -68,14 +38,12 @@ module Pechkin
       end
 
       it 'renders data values with template object' do
-        template = double
+        template = MessageTemplate.new('Hello!')
         data = { foo: 42, bar: 38 }
-        message_config = { 'template' => template }
+        message_config = Message.new({ 'template' => template })
 
         expect(channel).to receive(:messages).and_return('a' => message_config)
-        expect(template).to receive(:render).with(data).and_return('Hello!')
-        expect(connector)
-          .to receive(:send_message).with('#general', 'Hello!', message_config)
+        expect(connector).to receive(:send_message).with('#general', 'Hello!', { })
 
         handler.handle('a', 'a', data)
       end
@@ -85,10 +53,12 @@ module Pechkin
         let(:channel) { double }
         let(:handler) { Handler.new('a' => channel) }
         let(:msg) do
-          YAML.safe_load <<~MESSAGE
+          v = YAML.safe_load <<~MESSAGE
             allow:
               - branch: 'master'
           MESSAGE
+
+          Message.new(v)
         end
 
         before { allow(channel).to receive(:messages).and_return('a' => msg) }
@@ -109,10 +79,10 @@ module Pechkin
           expect(channel)
             .to receive(:chat_ids).and_return(['#general', '#random'])
           expect(connector).to receive(:send_message)
-            .with('#general', '', msg)
+            .with('#general', '', msg.to_h)
             .and_return(:ok_general)
           expect(connector).to receive(:send_message)
-            .with('#random', '', msg)
+            .with('#random', '', msg.to_h)
             .and_return(:ok_random)
 
           expect(handler.handle('a', 'a', data))
