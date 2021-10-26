@@ -1,4 +1,8 @@
-# 1.5.0
+# 1.6.0
+
+* Add `pechkin_version` metric
+
+# 1.5.1
 
 * Add template expansion for any variable
 
