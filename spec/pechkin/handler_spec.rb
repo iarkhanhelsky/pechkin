@@ -43,7 +43,7 @@ module Pechkin
         message_config = Message.new({ 'template' => template })
 
         expect(channel).to receive(:messages).and_return('a' => message_config)
-        expect(connector).to receive(:send_message).with('#general', 'Hello!', { })
+        expect(connector).to receive(:send_message).with('#general', 'Hello!', {})
 
         handler.handle('a', 'a', data)
       end

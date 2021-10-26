@@ -1,5 +1,6 @@
 AllCops:
   TargetRubyVersion: 2.5
+
 Metrics/ModuleLength:
   Exclude:
     - 'spec/**/*_spec.rb'
@@ -16,6 +17,9 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   Max: 25
+
+Metrics/CyclomaticComplexity:
+  Max: 15
 
 Style/HashSyntax:
   Exclude:

@@ -1,7 +1,7 @@
 module Pechkin
   describe Message do
     it 'merges data values with variables field' do
-      template = MessageTemplate.new("Hello!")
+      template = MessageTemplate.new('Hello!')
       variables = { 'issue_labels' => ['HH-\\d+', 'hh'] }
       message = Message.new({ 'template' => template, 'variables' => variables })
 

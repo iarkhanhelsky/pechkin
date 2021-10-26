@@ -1,4 +1,7 @@
 module Pechkin
+  # Message object
+  #
+  # TBD
   class Message
     def initialize(message)
       @message = message
