@@ -12,6 +12,12 @@ module Pechkin
 
     def call(env)
       req = Rack::Request.new(env)
+
+      # Stub for favicon.ico
+      if req.path_info == '/favicon.ico'
+        return response(405, '')  # Возвращает пустой ответ с HTTP-статусом 405
+      end
+
       result = RequestHandler.new(handler, req, logger).handle
       response(200, result)
     rescue AppError => e
