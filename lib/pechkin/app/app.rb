@@ -15,7 +15,7 @@ module Pechkin
 
       # Stub for favicon.ico
       if req.path_info == '/favicon.ico'
-        return response(405, '')  # Return empty response 405 Method Not Allowed
+        return response(405, '') # Return empty response 405 Method Not Allowed
       end
 
       result = RequestHandler.new(handler, req, logger).handle
