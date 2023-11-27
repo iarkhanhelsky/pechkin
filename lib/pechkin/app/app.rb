@@ -1,9 +1,6 @@
 module Pechkin
   # Rack application to handle requests
   class App
-    DEFAULT_CONTENT_TYPE = { 'Content-Type' => 'application/json' }
-    DEFAULT_HEADERS = {}.merge(DEFAULT_CONTENT_TYPE)
-
     attr_accessor :handler, :logger
 
     def initialize(logger)
@@ -15,7 +12,7 @@ module Pechkin
 
       # Stub for favicon.ico
       if req.path_info == '/favicon.ico'
-        return response(405, '')  # Return empty response 405 Method Not Allowed
+        return response(405, '') # Return empty response 405 Method Not Allowed
       end
 
       result = RequestHandler.new(handler, req, logger).handle
@@ -29,7 +26,7 @@ module Pechkin
     private
 
     def response(code, body)
-      [code.to_s, DEFAULT_HEADERS.dup, [body.to_json]]
+      [code.to_s, { 'Content-Type' => 'application/json' }, [body.to_json]]
     end
 
     def proces_app_error(req, err)
