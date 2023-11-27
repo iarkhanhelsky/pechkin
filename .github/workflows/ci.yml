@@ -1,7 +1,9 @@
 name: Lint & Tests
 on:
-  - push
-  - pull_request_target
+  push:
+    branches:
+      - master
+  pull_request:
 jobs:
   lint:
     name: Lint & Test
