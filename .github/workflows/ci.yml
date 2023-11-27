@@ -1,6 +1,7 @@
 name: Lint & Tests
 on:
   - push
+  - pull_request_target
 jobs:
   lint:
     name: Lint & Test
@@ -8,8 +9,8 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - 2.6
           - 3.0
+          - 3.3
     steps:
       - uses: actions/checkout@v1
       - name: Setup ruby

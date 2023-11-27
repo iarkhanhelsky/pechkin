@@ -18,7 +18,7 @@ module Pechkin
       raise ConfigurationError, "'#{views_dir}' is not a directory" unless File.directory?(views_dir)
 
       Dir["#{views_dir}/**/*.erb"].each do |f|
-        relative_path = f["#{views_dir}/".length..-1]
+        relative_path = f["#{views_dir}/".length..]
         views[relative_path] = MessageTemplate.new(IO.read(f))
       end
     end
