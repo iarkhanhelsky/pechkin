@@ -18,9 +18,8 @@ module Pechkin
       if MessageTemplate::ERB_INITIALIZE_KEYWORD_ARGUMENTS # Ruby 2.6+
         @erb_template = ERB.new(erb, trim_mode: '-')
       else
-        safe_level = nil
         trim_mode = '-'
-        @erb_template = ERB.new(erb, safe_level, trim_mode)
+        @erb_template = ERB.new(erb, trim_mode: trim_mode)
       end
     end
 
