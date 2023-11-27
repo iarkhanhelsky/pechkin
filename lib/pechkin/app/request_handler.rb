@@ -23,7 +23,8 @@ module Pechkin
       raise AppError.message_not_found unless message?
 
       data = parse_data(req.body.read)
-      handler.handle(channel_id, message_id, data).each do |i|
+      # handler.handle() requires keyword arguments
+      handler.handle(channel_id, message_id, **data).each do |i|
         logger.info "Sent #{channel_id}/#{message_id}: #{i.to_json}"
       end
     end

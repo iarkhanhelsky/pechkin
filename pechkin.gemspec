@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.executables << 'pechkin'
   s.homepage = 'https://github.com/iarkhanhelsky/pechkin'
 
-  s.required_ruby_version = '> 2.5'
+  s.required_ruby_version = '> 3.0'
 
-  s.add_runtime_dependency 'htauth', '2.1.1'
-  s.add_runtime_dependency 'powerpack', '0.1.2'
-  s.add_runtime_dependency 'prometheus-client', '1.0.0'
-  s.add_runtime_dependency 'rack', '2.2.3'
+  s.add_runtime_dependency 'htauth', '2.2.0'
+  s.add_runtime_dependency 'powerpack', '0.1.3'
+  s.add_runtime_dependency 'prometheus-client', '4.2.2'
+  s.add_runtime_dependency 'rack', '3.0.8'
 end
