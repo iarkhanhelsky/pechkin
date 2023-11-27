@@ -1,8 +1,8 @@
 module Pechkin
   # Rack application to handle requests
   class App
-    DEFAULT_CONTENT_TYPE = { 'Content-Type' => 'application/json' }.freeze
-    DEFAULT_HEADERS = {}.merge(DEFAULT_CONTENT_TYPE).freeze
+    DEFAULT_CONTENT_TYPE = { 'Content-Type' => 'application/json' }
+    DEFAULT_HEADERS = {}.merge(DEFAULT_CONTENT_TYPE)
 
     attr_accessor :handler, :logger
 
@@ -23,7 +23,7 @@ module Pechkin
     private
 
     def response(code, body)
-      [code.to_s, DEFAULT_HEADERS, [body.to_json]]
+      [code.to_s, DEFAULT_HEADERS.dup, [body.to_json]]
     end
 
     def proces_app_error(req, err)

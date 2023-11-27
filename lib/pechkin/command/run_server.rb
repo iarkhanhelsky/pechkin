@@ -7,10 +7,13 @@ module Pechkin
       end
 
       def execute
-        Rack::Server.start(app: AppBuilder.new.build(handler, options),
-                           Host: options.bind_address,
-                           Port: options.port,
-                           pid: options.pid_file)
+        app = AppBuilder.new.build(handler, options)
+
+        server = Puma::Server.new(app).tap do |s|
+          s.add_tcp_listener(options.host, options.port)
+        end
+
+        server.run(false)
       end
     end
   end
