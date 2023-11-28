@@ -103,13 +103,13 @@ module Pechkin
                    desc: 'Path to output PID file'
 
     opt :server_workers, names: ['--min-threads [SERVER_WORKERS]'], default: 2, type: Integer,
-        desc: 'Server workers count. Default: 1'
+                         desc: 'Server workers count. Default: 1'
 
-    opt :min_threads, names: ['--min-threads [MIN_THREADS]'],default: 5, type: Integer,
-        desc: 'Min threads count. Default: 5'
+    opt :min_threads, names: ['--min-threads [MIN_THREADS]'], default: 5, type: Integer,
+                      desc: 'Min threads count. Default: 5'
 
     opt :max_threads, names: ['--max-threads [MAX_THREADS]'], default: 20, type: Integer,
-        desc: 'Max threads count. Default: 20'
+                      desc: 'Max threads count. Default: 20'
 
     opt :log_dir, names: ['--log-dir [DIR]'],
                   desc: 'Path to log directory. Output will be writen to'  \
