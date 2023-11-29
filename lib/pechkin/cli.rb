@@ -102,9 +102,6 @@ module Pechkin
     opt :pid_file, names: ['-p', '--pid-file [FILE]'],
                    desc: 'Path to output PID file'
 
-    opt :server_workers, names: ['--min-threads [SERVER_WORKERS]'], default: 2, type: Integer,
-                         desc: 'Server workers count. Default: 1'
-
     opt :min_threads, names: ['--min-threads [MIN_THREADS]'], default: 5, type: Integer,
                       desc: 'Min threads count. Default: 5'
 
