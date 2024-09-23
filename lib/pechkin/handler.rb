@@ -33,7 +33,11 @@ module Pechkin
       connector = channel_config.connector
 
       if message_allowed?(message_config, data)
-        chats.map { |chat| connector.send_message(chat, text, message_config) }
+        if chats.empty? || chats[0] == nil
+          connector.send_message(data["email"], text, message_config)
+        else
+          chats.map { |chat| connector.send_message(chat, text, message_config) }
+        end
       else
         logger.warn "#{channel_id}/#{msg_id}: " \
                     "Skip sending message. Because it's not allowed"

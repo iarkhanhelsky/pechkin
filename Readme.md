@@ -78,7 +78,7 @@ channels/
 Common channel setting are stored in `_channel.yml` file. You can configure
 following parameters:
 
-* `chat_ids` - list of chats or channels to send your message to
+* `chat_ids` - list of chats or channels to send your message to. In case of slack DM this field should be empty.
 * `bot` - name of bot to use for sending messages
 
 ## Messages
@@ -162,6 +162,9 @@ Slack allows to send messages with empty text and only attachments set. Content
 of this field is direct mapping for `attachments` field in Slack API. See
 [documentation](https://api.slack.com/docs/message-attachments) for more
 details.
+
+*Slack Direct Messages*:
+* For sending Slack Direct Messages `email` at request body is required.
 
 ## Authorization
 
