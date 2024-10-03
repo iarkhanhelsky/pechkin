@@ -1,2 +1,5 @@
-chat_ids: '#random'
+chat_ids:
+  - '#random'
+  - type: email
+    value: '.email'
 bot: marvin

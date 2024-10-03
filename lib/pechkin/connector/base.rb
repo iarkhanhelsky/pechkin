@@ -8,6 +8,10 @@ module Pechkin
 
       def send_message(chat, message, message_desc); end
 
+      def expand_chat_ids(chat_ids, _data)
+        chat_ids
+      end
+
       def preview(chats, message, _message_desc)
         "Connector: #{self.class.name}; Chats: #{chats.join(', ')}\n" \
         "Message:\n#{message}"

@@ -6,7 +6,8 @@ module Pechkin
       def initialize(bot_token, name)
         super()
 
-        @headers = { 'Authorization' => "Bearer #{bot_token}" }
+        @headers = { 'Authorization' => "Bearer #{bot_token}",
+                     'Content-Type' => 'application/json; charset=UTF-8' }
         @name = name
       end
 
@@ -26,6 +27,44 @@ module Pechkin
         response = post_data(url, params, headers: @headers)
 
         { channel: channel, code: response.code.to_i, response: response.body }
+      end
+
+      def expand_chat_ids(chat_ids, data); end
+
+      private
+
+      def resolve(chat_id, data)
+        if chat_id.is_a?(Hash)
+          type = chat_id['type']
+          value = resolve(chat_id['value'], data)
+
+          case type
+          when 'email'
+            lookup_by_email(value)
+          when 'channel'
+            value
+          else
+            raise "unsupported type: #{type}"
+          end
+        elsif chat_id.start_with?('.')
+          _, *rest = value.split('.')
+          rest.inject(data) { |d, k| d[k] }
+        else
+          chat_id
+        end
+      end
+
+      def lookup_by_email(email)
+        url = "https://slack.com/api/users.lookupByEmail?email=#{email}"
+
+        uri = URI.parse(url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = url.start_with?('https://')
+
+        request = Net::HTTP::Get.new(uri.request_uri, @headers)
+        resp = JSON.parse(http.request(request).body)
+
+        resp['user']['id']
       end
     end
   end
