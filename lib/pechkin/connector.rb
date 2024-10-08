@@ -6,5 +6,4 @@ require 'cgi'
 
 require_relative 'connector/base'
 require_relative 'connector/slack'
-require_relative 'connector/slack_dm'
 require_relative 'connector/telegram'

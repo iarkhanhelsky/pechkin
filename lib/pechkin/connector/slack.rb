@@ -10,8 +10,26 @@ module Pechkin
         @name = name
       end
 
-      def send_message(channel, message, message_desc)
+      def resolve_user_id(email)
+        url = 'https://slack.com/api/users.lookupByEmail?email=' + email
+
+        uri = URI.parse(url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = url.start_with?('https://')
+
+        request = Net::HTTP::Get.new(uri.request_uri, @headers)
+
+        resp = JSON.parse(http.request(request).body)
+
+        resp["user"]["id"]
+      end
+
+      def send_message(channel, email, message, message_desc)
         text = CGI.unescape_html(message)
+
+        if (channel == "email")
+          channel = resolve_user_id(email)
+        end
 
         attachments = message_desc['slack_attachments'] || {}
 

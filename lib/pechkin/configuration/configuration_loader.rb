@@ -16,8 +16,6 @@ module Pechkin
         Connector::Telegram.new(bot.token, bot.name)
       when 'slack'
         Connector::Slack.new(bot.token, bot.name)
-      when 'slack_dm'
-        Connector::SlackDM.new(bot.token, bot.name)
       else
         raise "Unknown connector #{bot.connector} for #{bot.name}"
       end

@@ -6,7 +6,7 @@ module Pechkin
         'Content-Type' => 'application/json; charset=UTF-8'
       }.freeze
 
-      def send_message(chat, message, message_desc); end
+      def send_message(chat, email, message, message_desc); end
 
       def preview(chats, message, _message_desc)
         "Connector: #{self.class.name}; Chats: #{chats.join(', ')}\n" \
