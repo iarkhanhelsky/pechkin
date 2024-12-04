@@ -1,5 +1,7 @@
 module Pechkin
   module Connector
+    class SlackApiRequestError < StandardError; end
+
     class Slack < Connector::Base # :nodoc:
       attr_reader :name
 
@@ -19,7 +21,13 @@ module Pechkin
 
         request = Net::HTTP::Get.new(uri.request_uri, @headers)
 
-        resp = JSON.parse(http.request(request).body)
+        response = http.request(request)
+
+        if response.is_a?(Net::HTTPSuccess)
+          resp = JSON.parse(response.body)
+        else
+          raise SlackApiRequestError, response.message
+        end
 
         resp["user"]["id"]
       end
