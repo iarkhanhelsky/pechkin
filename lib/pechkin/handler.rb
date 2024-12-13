@@ -26,7 +26,7 @@ module Pechkin
     # @param data [Object] data object to render via template. This is usualy
     #  deserialized json.
     # @see Configuration
-    def handle(channel_id, msg_id, data)
+    def handle(channel_id, msg_id, logger, data)
       channel_config, message_config, text =
         prepare_message(channel_id, msg_id, data)
       chats = channel_config.chat_ids
@@ -34,7 +34,7 @@ module Pechkin
       email = data["email"]
 
       if message_allowed?(message_config, data)
-        chats.map { |chat| connector.send_message(chat, email, text, message_config) }
+        chats.map { |chat| connector.send_message(chat, email, text, message_config, logger) }
       else
         logger.warn "#{channel_id}/#{msg_id}: " \
                     "Skip sending message. Because it's not allowed"
