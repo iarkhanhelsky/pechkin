@@ -1,7 +1,7 @@
 module Pechkin
   module Command
     BOT_ENTRY_FORMAT = '  %-25s   %-10s   %-60s '.freeze
-    CHAT_ENTRY_FORMAT = '  %-40s   %-40s   %-30s '.freeze
+    CHAT_ENTRY_FORMAT = '  %-60s   %-40s   %-30s '.freeze
 
     # List channels configuration
     class List < Base
@@ -31,7 +31,7 @@ module Pechkin
         puts "\nChannels:"
         puts format(CHAT_ENTRY_FORMAT, 'CHANNEL', 'MESSAGE', 'BOT')
         channels.each do |channel_name, channel|
-          channel.messages.each do |message_name, _message|
+          channel.messages.each_key do |message_name|
             puts format(CHAT_ENTRY_FORMAT,
                         channel_name, message_name, channel.connector.name)
           end

@@ -28,8 +28,8 @@ module Pechkin
     def load_bot_configuration(bot_file)
       bot_configuration = yaml_load(bot_file)
 
-      token = check_field(bot_configuration, 'token', bot_file)
-      connector = check_field(bot_configuration, 'connector', bot_file)
+      token = fetch_value_from_env(bot_configuration, 'token_env', bot_file)
+      connector = fetch_field(bot_configuration, 'connector', bot_file)
 
       Bot.new(token: token, connector: connector)
     end
