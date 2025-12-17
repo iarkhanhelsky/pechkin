@@ -40,8 +40,8 @@ module Pechkin
 
       channel_config = yaml_load(channel_file)
 
-      bot = check_field(channel_config, 'bot', channel_file)
-      chat_ids = check_field(channel_config, 'chat_ids', channel_file)
+      bot = fetch_field(channel_config, 'bot', channel_file)
+      chat_ids = fetch_field(channel_config, 'chat_ids', channel_file)
       chat_ids = [chat_ids] unless chat_ids.is_a?(Array)
       messages = load_messages_configuration(channel_dir)
 
