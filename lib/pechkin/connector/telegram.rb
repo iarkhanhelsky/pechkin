@@ -10,7 +10,7 @@ module Pechkin
         @name = name
       end
 
-      def send_message(chat_id, message, message_desc)
+      def send_message(chat_id, _email, message, message_desc, _logger)
         options = { parse_mode: message_desc['telegram_parse_mode'] || 'HTML' }
         params = options.update(chat_id: chat_id, text: message)
 

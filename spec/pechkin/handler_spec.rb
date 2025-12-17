@@ -1,9 +1,12 @@
 module Pechkin
   describe Handler do
     describe '#handle' do
+      let(:logger) { double('Logger') }
+      before { allow(logger).to receive(:warn).with(any_args) }
+
       context 'when configuration has no channel with provided id' do
         it do
-          expect { Handler.new({}).handle('foo', 'bar', {}) }
+          expect { Handler.new({}).handle('foo', 'bar', logger, {}) }
             .to raise_error(ChannelNotFoundError)
         end
       end
@@ -14,7 +17,7 @@ module Pechkin
           expect(channel_double).to receive(:messages).and_return({})
           handler = Handler.new('foo' => channel_double)
 
-          expect { handler.handle('foo', 'bar', {}) }
+          expect { handler.handle('foo', 'bar', logger, {}) }
             .to raise_error(MessageNotFoundError)
         end
       end
@@ -28,13 +31,13 @@ module Pechkin
       before { allow(channel).to receive(:connector).and_return(connector) }
 
       it 'sends message for each channel id' do
-        expect(connector).to receive(:send_message).with('#general', '', {})
-        expect(connector).to receive(:send_message).with('#random', '', {})
+        expect(connector).to receive(:send_message).with('#general', nil, '', {}, logger)
+        expect(connector).to receive(:send_message).with('#random', nil, '', {}, logger)
 
         expect(channel)
-          .to receive(:chat_ids).and_return(['#general', '#random'])
+          .to receive(:chat_ids).and_return(%w[#general #random])
 
-        handler.handle('a', 'a', {})
+        handler.handle('a', 'a', logger, {})
       end
 
       it 'renders data values with template object' do
@@ -43,9 +46,9 @@ module Pechkin
         message_config = Message.new({ 'template' => template })
 
         expect(channel).to receive(:messages).and_return('a' => message_config)
-        expect(connector).to receive(:send_message).with('#general', 'Hello!', {})
+        expect(connector).to receive(:send_message).with('#general', nil, 'Hello!', {}, logger)
 
-        handler.handle('a', 'a', data)
+        handler.handle('a', 'a', logger, data)
       end
 
       context 'when message contains allow / forbid rules' do
@@ -68,24 +71,24 @@ module Pechkin
         it 'all chats will be skipped' do
           data = { 'branch' => 'default' }
           expect(channel)
-            .to receive(:chat_ids).and_return(['#general', '#random'])
+            .to receive(:chat_ids).and_return(%w[#general #random])
 
-          expect(handler.handle('a', 'a', data)).to eq([])
+          expect(handler.handle('a', 'a', logger, data)).to eq([])
         end
 
         it 'message will be send' do
           data = { 'branch' => 'master' }
 
           expect(channel)
-            .to receive(:chat_ids).and_return(['#general', '#random'])
+            .to receive(:chat_ids).and_return(%w[#general #random])
           expect(connector).to receive(:send_message)
-            .with('#general', '', msg.to_h)
+            .with('#general', nil, '', msg.to_h, logger)
             .and_return(:ok_general)
           expect(connector).to receive(:send_message)
-            .with('#random', '', msg.to_h)
+            .with('#random', nil, '', msg.to_h, logger)
             .and_return(:ok_random)
 
-          expect(handler.handle('a', 'a', data))
+          expect(handler.handle('a', 'a', logger, data))
             .to eq(%i[ok_general ok_random])
         end
       end
