@@ -21,7 +21,7 @@ module Pechkin
       result = RequestHandler.new(handler, req, logger).handle
       response(200, result)
     rescue AppError => e
-      proces_app_error(req, e)
+      process_app_error(req, e)
     rescue StandardError => e
       process_unhandled_error(req, e)
     end
@@ -32,7 +32,7 @@ module Pechkin
       [code.to_s, DEFAULT_HEADERS.dup, [body.to_json]]
     end
 
-    def proces_app_error(req, err)
+    def process_app_error(req, err)
       data = { status: 'error', message: err.message }
       req.body.rewind
       body = req.body.read
