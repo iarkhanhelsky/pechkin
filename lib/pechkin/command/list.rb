@@ -31,7 +31,7 @@ module Pechkin
         puts "\nChannels:"
         puts format(CHAT_ENTRY_FORMAT, 'CHANNEL', 'MESSAGE', 'BOT')
         channels.each do |channel_name, channel|
-          channel.messages.each do |message_name, _message|
+          channel.messages.each_key do |message_name|
             puts format(CHAT_ENTRY_FORMAT,
                         channel_name, message_name, channel.connector.name)
           end
