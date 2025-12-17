@@ -1,7 +1,7 @@
 module Pechkin
   module Command
     BOT_ENTRY_FORMAT = '  %-25s   %-10s   %-60s '.freeze
-    CHAT_ENTRY_FORMAT = '  %-40s   %-40s   %-30s '.freeze
+    CHAT_ENTRY_FORMAT = '  %-60s   %-40s   %-30s '.freeze
 
     # List channels configuration
     class List < Base
