@@ -1,2 +1,2 @@
-token: xob-1234567890987654321
+token_env: MARVIN_BOT_TOKEN
 connector: slack
