@@ -24,7 +24,7 @@ module Pechkin
 
       data = parse_data(req.body.read)
       # handler.handle() requires keyword arguments
-      handler.handle(channel_id, message_id, **data).each do |i|
+      handler.handle(channel_id, message_id, logger, **data).each do |i|
         logger.info "Sent #{channel_id}/#{message_id}: #{i.to_json}"
       end
     end
