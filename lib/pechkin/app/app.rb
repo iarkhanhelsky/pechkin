@@ -34,8 +34,13 @@ module Pechkin
 
     def process_app_error(req, err)
       data = { status: 'error', message: err.message }
-      req.body.rewind
-      body = req.body.read
+      if req.body
+        req.body.rewind
+        body = req.body.read
+      else
+        body = ''
+      end
+
       logger.error "Can't process message: #{err.message}. Body: '#{body}'"
       response(err.code, data)
     end
