@@ -46,9 +46,22 @@ bots/bender.yml
 
 Each `bot/*.yml` is bot description. It has following fields:
 
-* `token` - API token to authorize bot requests. See IM documentation for
-  details.
+* `token_env` - Name of environment variable containing the API token to authorize bot requests. **Note:** For security reasons, tokens are now loaded from environment variables instead of being stored in configuration files. Set the environment variable before starting pechkin. See IM documentation for token details.
 * `connector` - connector type. Currenlty: `slack` or `telegram`.
+
+**Example bot configuration:**
+
+```yaml
+# bots/marvin.yml
+token_env: MARVIN_BOT_TOKEN
+connector: slack
+```
+
+Then set the environment variable:
+
+```bash
+export MARVIN_BOT_TOKEN=xoxb-your-actual-token-here
+```
 
 Bot name is taken from `yml` file name. So `bot/bender.yml` is `bender` and
 `bot/marvin.yml` is `marvin`
@@ -162,6 +175,33 @@ Slack allows to send messages with empty text and only attachments set. Content
 of this field is direct mapping for `attachments` field in Slack API. See
 [documentation](https://api.slack.com/docs/message-attachments) for more
 details.
+
+**Email-based user resolution (v2.0.2+)**:
+
+Pechkin can send direct messages to Slack users via email address. To use this feature:
+
+1. Set the channel to `'email'` in your channel configuration
+2. Include an `email` field in your POST request data
+
+Example channel configuration:
+
+```yaml
+# channels/my-channel/_channel.yml
+bot: marvin
+chat_ids:
+  - 'email'
+```
+
+Example POST request:
+
+```json
+{
+  "email": "user@example.com",
+  "message": "Hello!"
+}
+```
+
+Pechkin will automatically lookup the user's Slack ID using the Slack API and send them a direct message.
 
 ## Authorization
 
