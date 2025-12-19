@@ -17,7 +17,10 @@ module Pechkin
       env_var = object[token_field]
       token = ENV.fetch(env_var, nil)
 
-      raise ConfigurationError, "#{file}: environment var '#{token_field}' is missing" if token.to_s.strip.empty?
+      if token.to_s.strip.empty?
+        raise ConfigurationError,
+              "#{file}: environment variable '#{env_var}' (from '#{token_field}') is not set"
+      end
 
       token
     end
