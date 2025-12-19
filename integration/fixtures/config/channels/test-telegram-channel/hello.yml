@@ -1,0 +1,2 @@
+template: hello.erb
+telegram_parse_mode: markdown

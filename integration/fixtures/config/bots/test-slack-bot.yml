@@ -1,0 +1,2 @@
+token_env: TEST_SLACK_BOT_TOKEN
+connector: slack

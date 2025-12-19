@@ -7,11 +7,10 @@ Metrics/ModuleLength:
     - 'spec/**/*_spec.rb'
 
 Metrics/BlockLength:
+  AllowedMethods: ['describe', 'context', 'it']
   Exclude:
     - 'Rakefile'
     - '**/*.rake'
-    - 'test/**/*.rb'
-    - 'spec/**/*.rb'
 
 Metrics/MethodLength:
   Max: 30

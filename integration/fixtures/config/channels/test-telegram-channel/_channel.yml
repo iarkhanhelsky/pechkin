@@ -1,0 +1,3 @@
+bot: test-telegram-bot
+chat_ids:
+  - '123456789'
