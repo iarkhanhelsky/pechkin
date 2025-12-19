@@ -1,0 +1,3 @@
+template: hello.erb
+allow:
+  - branch: 'master'

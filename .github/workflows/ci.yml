@@ -26,3 +26,4 @@ jobs:
           bundle install --jobs 4 --retry 3
       - run: bundle exec rake lint
       - run: bundle exec rake spec
+      - run: bundle exec rake integration_spec

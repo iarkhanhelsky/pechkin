@@ -1,0 +1,3 @@
+bot: test-slack-bot
+chat_ids:
+  - 'email'

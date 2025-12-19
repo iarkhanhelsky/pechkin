@@ -1,0 +1,2 @@
+token_env: TEST_TELEGRAM_BOT_TOKEN
+connector: telegram
