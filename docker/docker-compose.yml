@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  pechkin:
+    image: pechkin:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "${PECHKIN_HOST_PORT:-9292}:9292"
+    volumes:
+      # Mount your configuration directory here
+      # Example: - ./examples:/var/data/pechkin:ro
+      - ../examples:/var/data/pechkin:ro
+    environment:
+      - PECHKIN_CONFIG_DIR=/var/data/pechkin
+      - PECHKIN_PORT=9292
+      - PECHKIN_BIND_ADDRESS=0.0.0.0
+      - PECHKIN_MIN_THREADS=${PECHKIN_MIN_THREADS:-5}
+      - PECHKIN_MAX_THREADS=${PECHKIN_MAX_THREADS:-20}
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9292/metrics",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Add Prometheus for metrics collection
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #   depends_on:
+  #     - pechkin

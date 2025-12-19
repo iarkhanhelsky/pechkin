@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+CHANGELOG.md
+LICENSE.txt
+
+# Ruby
+*.gem
+.bundle
+vendor/bundle
+
+# Tests
+spec/
+integration/
+.rspec
+
+# CI/CD
+.github/
+
+# IDE
+.vscode/
+.idea/
+
+# Examples (not needed in container)
+examples/
+
+# Build artifacts
+tmp/
+log/
