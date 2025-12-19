@@ -8,7 +8,6 @@ WebMock.disable_net_connect!
 
 # Load Pechkin library
 require_relative '../lib/pechkin'
-
 require_relative 'support/integration_helper'
 
 RSpec.configure do |config|
@@ -27,9 +26,6 @@ RSpec.configure do |config|
 
   # Show detailed failure output
   config.formatter = :progress
-
-  # Don't use around(:each) timeout - it can interfere with server startup/shutdown
-  # Instead, let tests fail naturally if they hang
 end
 
 # Custom matchers for integration tests

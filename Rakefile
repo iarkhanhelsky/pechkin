@@ -6,6 +6,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 RSpec::Core::RakeTask.new(:integration_spec) do |t|
   t.pattern = 'integration/**/*_spec.rb'
+  t.rspec_opts = '--default-path integration'
 end
 
 RuboCop::RakeTask.new(:lint) do |t|

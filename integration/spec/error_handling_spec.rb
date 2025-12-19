@@ -1,5 +1,3 @@
-require_relative 'spec_helper'
-
 RSpec.describe 'Error handling' do
   let(:config_dir) { File.expand_path('fixtures/config', __dir__) }
 
