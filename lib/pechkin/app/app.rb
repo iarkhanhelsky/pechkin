@@ -29,7 +29,7 @@ module Pechkin
     private
 
     def response(code, body)
-      [code.to_s, DEFAULT_HEADERS.dup, [body.to_json]]
+      [code, DEFAULT_HEADERS.dup, [body.to_json]]
     end
 
     def process_app_error(req, err)
