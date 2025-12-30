@@ -23,7 +23,7 @@ RSpec.describe 'Request validation' do
     post '/test-slack-channel/hello', '', { 'CONTENT_TYPE' => 'application/json' }
 
     # Should not crash, may return error or use empty data
-    expect([503]).to include(last_response.status)
+    expect([400]).to include(last_response.status)
   end
 
   it 'handles invalid JSON gracefully' do
@@ -31,6 +31,6 @@ RSpec.describe 'Request validation' do
     post '/test-slack-channel/hello', 'not valid json', { 'CONTENT_TYPE' => 'application/json' }
 
     # Should return an error
-    expect([503]).to include(last_response.status)
+    expect([400]).to include(last_response.status)
   end
 end
