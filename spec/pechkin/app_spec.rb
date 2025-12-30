@@ -95,7 +95,7 @@ describe Pechkin::App do
     expect(handler)
       .to receive(:message?).with('a', 'b').and_return(true)
     expect(handler)
-      .to receive(:handle).with('a', 'b', any_args, 'name' => 'John').and_return([])
+      .to receive(:handle).with('a', 'b', anything, hash_including('name' => 'John')).and_return([])
 
     post '/a/b', data.to_json
 
@@ -119,7 +119,7 @@ describe Pechkin::App do
       expect(handler)
         .to receive(:message?).with('a', 'b').and_return(true)
       expect(handler)
-        .to receive(:handle).with('a', 'b', any_args, 'name' => 'John').and_return([])
+        .to receive(:handle).with('a', 'b', anything, hash_including('name' => 'John')).and_return([])
 
       post '/a/b', data.to_json
 
@@ -165,7 +165,7 @@ describe Pechkin::App do
       expect(handler)
         .to receive(:message?).with('a', 'b').and_return(true)
       expect(handler)
-        .to receive(:handle).with('a', 'b', any_args, 'name' => 'John').and_return([])
+        .to receive(:handle).with('a', 'b', anything, hash_including('name' => 'John')).and_return([])
 
       post '/a/b', data.to_json
 
@@ -181,7 +181,7 @@ describe Pechkin::App do
       expect(handler)
         .to receive(:message?).with('a', 'b').and_return(true)
       expect(handler)
-        .to receive(:handle).with('a', 'b', any_args, 'name' => 'John').and_return([])
+        .to receive(:handle).with('a', 'b', anything, hash_including('name' => 'John')).and_return([])
 
       env = Rack::MockRequest.env_for('/a/b', method: 'POST', input: data.to_json)
       status, _headers, _body = app.call(env)
