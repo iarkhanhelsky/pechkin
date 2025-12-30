@@ -5,7 +5,9 @@ Gem::Specification.new do |s|
   s.version     = Pechkin::Version.version_string
   s.licenses    = ['MIT']
   s.summary     = 'Template-driven webhook-to-Slack/Telegram proxy'
-  s.description = 'Pechkin runs an HTTP server that accepts JSON webhooks and turns them into formatted Slack or Telegram messages. Configure bots, channels, filters, and templates to route and render requests. Optional Basic Auth (.htpasswd) and Prometheus metrics are included.'
+  s.description = 'Pechkin runs an HTTP server that accepts JSON webhooks and turns them into formatted Slack ' \
+                  'or Telegram messages. Configure bots, channels, filters, and templates to route and render ' \
+                  'requests. Optional Basic Auth (.htpasswd) and Prometheus metrics are included.'
   s.authors     = ['Ilya Arkhanhelsky']
   s.email       = 'ilya.arkhanhelsky at gmail.com'
   s.files       = Dir['lib/**/*.rb']
