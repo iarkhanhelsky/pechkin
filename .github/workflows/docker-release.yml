@@ -2,6 +2,8 @@ name: Build and Push Docker Image
 
 on:
   push:
+    branches:
+      - "main"
     tags:
       - v*
 
@@ -25,11 +27,23 @@ jobs:
 
       - name: Extract version from tag
         id: version
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           # Remove 'v' prefix from tag (e.g., v2.1.0 -> 2.1.0)
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Version: $VERSION"
+
+      - name: Prepare tags
+        id: tags
+        run: |
+          TAGS="${{ secrets.DOCKERHUB_USERNAME }}/pechkin:latest"
+          if [[ "${{ github.ref }}" =~ ^refs/tags/v ]] && [ -n "${{ steps.version.outputs.version }}" ]; then
+            TAGS="$TAGS"$'\n'"${{ secrets.DOCKERHUB_USERNAME }}/pechkin:${{ steps.version.outputs.version }}"
+          fi
+          echo "tags<<EOF" >> $GITHUB_OUTPUT
+          echo "$TAGS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -37,9 +51,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/pechkin:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/pechkin:${{ steps.version.outputs.version }}
+          tags: ${{ steps.tags.outputs.tags }}
           platforms: linux/amd64,linux/arm64
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/pechkin:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/pechkin:buildcache,mode=max
