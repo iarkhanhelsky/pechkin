@@ -21,14 +21,16 @@ describe Pechkin::Command::SendData do
                            preview: false)
       cmd = Pechkin::Command::SendData.new(opt, stdout: StringIO.new, stderr: StringIO.new)
       handler = double
+      logger = double('Logger')
 
       expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
       expect(handler).to receive(:message?)
         .with('channel', 'message')
         .and_return(true)
+      expect(handler).to receive(:logger).and_return(logger)
 
-      expect(cmd).to receive_message_chain(:handler, :handle)
-        .with('channel', 'message', 'hello' => 'world')
+      expect(handler).to receive(:handle)
+        .with('channel', 'message', logger, hash_including('hello' => 'world'))
         .and_return([])
 
       cmd.execute
@@ -66,14 +68,16 @@ describe Pechkin::Command::SendData do
                            preview: false)
       cmd = Pechkin::Command::SendData.new(opt, stdout: StringIO.new, stderr: StringIO.new)
       handler = double
+      logger = double('Logger')
 
       expect(cmd).to receive(:handler).at_least(:once).and_return(handler)
       expect(handler).to receive(:message?)
         .with('channel', 'message')
         .and_return(true)
+      expect(handler).to receive(:logger).and_return(logger)
 
-      expect(cmd).to receive_message_chain(:handler, :handle)
-        .with('channel', 'message', 'hello' => 'world')
+      expect(handler).to receive(:handle)
+        .with('channel', 'message', logger, hash_including('hello' => 'world'))
         .and_return([])
 
       cmd.execute
