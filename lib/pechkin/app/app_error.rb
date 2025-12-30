@@ -12,7 +12,7 @@ module Pechkin
 
     class << self
       def bad_request(message)
-        AppError.new(503, message)
+        AppError.new(400, message)
       end
 
       def message_not_found

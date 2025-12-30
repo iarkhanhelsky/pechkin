@@ -109,7 +109,7 @@ describe Pechkin::App do
       expect(logger).to receive(:error).with(any_args)
 
       post '/a/b', 'Obviosly not a json string'
-      expect(last_response.status).to eq(503)
+      expect(last_response.status).to eq(400)
     end
   end
 
@@ -143,14 +143,14 @@ describe Pechkin::App do
       expect(last_response.status).to eq(405)
     end
 
-    it 'returns integer status code for 503 error' do
+    it 'returns integer status code for 400 error' do
       expect(handler).to receive(:message?).with('a', 'b').and_return(true)
       expect(logger).to receive(:error).with(any_args)
 
       post '/a/b', 'Invalid JSON'
 
       expect(last_response.status).to be_a(Integer)
-      expect(last_response.status).to eq(503)
+      expect(last_response.status).to eq(400)
     end
 
     it 'returns integer status code for favicon.ico request' do
