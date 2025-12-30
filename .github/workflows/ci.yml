@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - 3.0
-          - 3.3
+          - 3.4
+          - 4.0
     steps:
       - uses: actions/checkout@v1
       - name: Setup ruby
