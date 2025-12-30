@@ -12,3 +12,7 @@ group :dev do
   gem 'rubocop'
   gem 'webmock'
 end
+
+gem 'logger', '~> 1.7'
+
+gem 'ostruct', '~> 0.6.3'
