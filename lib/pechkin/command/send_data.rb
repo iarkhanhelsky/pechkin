@@ -17,7 +17,7 @@ module Pechkin
         if options.preview
           puts handler.preview(ch, msg, data)
         else
-          handler.handle(ch, msg, data).each do |e|
+          handler.handle(ch, msg, handler.logger, data).each do |e|
             puts "* #{e.inspect}"
           end
         end
