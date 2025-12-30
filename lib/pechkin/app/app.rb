@@ -1,3 +1,5 @@
+require_relative '../version'
+
 module Pechkin
   # Rack application to handle requests
   class App
@@ -15,11 +17,13 @@ module Pechkin
 
       # Stub for favicon.ico
       if req.path_info == '/favicon.ico'
-        return response(405, '') # Return empty response 405 Method Not Allowed
+        response(405, message: 'Method Not Allowed') # Return empty response 405 Method Not Allowed
+      elsif req.path_info == '/health'
+        response(200, { status: 'ok', message: 'Pechkin is running', version: Pechkin::Version.version_string })
+      else
+        result = RequestHandler.new(handler, req, logger).handle
+        response(200, result)
       end
-
-      result = RequestHandler.new(handler, req, logger).handle
-      response(200, result)
     rescue AppError => e
       process_app_error(req, e)
     rescue StandardError => e
