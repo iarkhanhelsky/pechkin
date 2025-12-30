@@ -13,6 +13,6 @@ group :dev do
   gem 'webmock'
 end
 
-gem "logger", "~> 1.7"
+gem 'logger', '~> 1.7'
 
-gem "ostruct", "~> 0.6.3"
+gem 'ostruct', '~> 0.6.3'
