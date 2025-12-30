@@ -23,7 +23,7 @@ module Pechkin
         puts "\nBots:"
         puts format(BOT_ENTRY_FORMAT, 'NAME', 'CONNECTOR', 'TOKEN')
         bots.each do |name, bot|
-          puts format(BOT_ENTRY_FORMAT, name, bot.connector, bot.token)
+          puts format(BOT_ENTRY_FORMAT, name, bot.connector, '*hidden*')
         end
       end
 
