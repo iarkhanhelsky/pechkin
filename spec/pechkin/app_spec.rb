@@ -112,4 +112,94 @@ describe Pechkin::App do
       expect(last_response.status).to eq(503)
     end
   end
+
+  context 'status codes are integers' do
+    it 'returns integer status code for successful response' do
+      data = { name: 'John' }
+      expect(handler)
+        .to receive(:message?).with('a', 'b').and_return(true)
+      expect(handler)
+        .to receive(:handle).with('a', 'b', any_args, 'name' => 'John').and_return([])
+
+      post '/a/b', data.to_json
+
+      expect(last_response.status).to be_a(Integer)
+      expect(last_response.status).to eq(200)
+    end
+
+    it 'returns integer status code for 404 error' do
+      expect(logger).to receive(:error).with(anything)
+      post '/b/c'
+
+      expect(last_response.status).to be_a(Integer)
+      expect(last_response.status).to eq(404)
+    end
+
+    it 'returns integer status code for 405 error' do
+      expect(logger).to receive(:error).with(anything)
+      get '/foo/bar'
+
+      expect(last_response.status).to be_a(Integer)
+      expect(last_response.status).to eq(405)
+    end
+
+    it 'returns integer status code for 503 error' do
+      expect(handler).to receive(:message?).with('a', 'b').and_return(true)
+      expect(logger).to receive(:error).with(any_args)
+
+      post '/a/b', 'Invalid JSON'
+
+      expect(last_response.status).to be_a(Integer)
+      expect(last_response.status).to eq(503)
+    end
+
+    it 'returns integer status code for favicon.ico request' do
+      post '/favicon.ico'
+
+      expect(last_response.status).to be_a(Integer)
+      expect(last_response.status).to eq(405)
+    end
+
+    it 'verifies raw Rack response array has integer status code' do
+      data = { name: 'John' }
+      expect(handler)
+        .to receive(:message?).with('a', 'b').and_return(true)
+      expect(handler)
+        .to receive(:handle).with('a', 'b', any_args, 'name' => 'John').and_return([])
+
+      post '/a/b', data.to_json
+
+      # Access the raw Rack response to verify the status is an integer
+      rack_response = last_response
+      status_code = rack_response.status
+      expect(status_code).to be_a(Integer)
+      expect(status_code).to eq(200)
+    end
+
+    it 'verifies raw Rack response array structure directly' do
+      data = { name: 'John' }
+      expect(handler)
+        .to receive(:message?).with('a', 'b').and_return(true)
+      expect(handler)
+        .to receive(:handle).with('a', 'b', any_args, 'name' => 'John').and_return([])
+
+      env = Rack::MockRequest.env_for('/a/b', method: 'POST', input: data.to_json)
+      status, _headers, _body = app.call(env)
+
+      # Verify the first element of the Rack response array is an integer
+      expect(status).to be_a(Integer)
+      expect(status).to eq(200)
+    end
+
+    it 'verifies raw Rack response array structure for error responses' do
+      expect(logger).to receive(:error).with(anything)
+
+      env = Rack::MockRequest.env_for('/b/c', method: 'POST')
+      status, _headers, _body = app.call(env)
+
+      # Verify the first element of the Rack response array is an integer
+      expect(status).to be_a(Integer)
+      expect(status).to eq(404)
+    end
+  end
 end
