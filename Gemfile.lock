@@ -24,7 +24,7 @@ GEM
     hashdiff (1.2.1)
     htauth (2.2.0)
       bcrypt (~> 3.1)
-    json (2.18.0)
+    json (2.19.2)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
